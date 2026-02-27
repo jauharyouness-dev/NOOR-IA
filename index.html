@@ -1,0 +1,2190 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>نور العِلم — منصة العلوم الإسلامية</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&family=Noto+Naskh+Arabic:wght@400;500;600;700&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+/* ============================================================
+   DESIGN TOKENS
+   ============================================================ */
+:root {
+  --bg-base:       #0c1a12;
+  --bg-elevated:   #111f16;
+  --bg-surface:    #162119;
+  --bg-overlay:    #1c2d20;
+  --bg-input:      #0e1a10;
+  --border-subtle: rgba(180,145,60,0.12);
+  --border-mid:    rgba(180,145,60,0.22);
+  --border-glow:   rgba(180,145,60,0.45);
+  --gold-vivid:    #c9973a;
+  --gold-soft:     #d8b060;
+  --gold-pale:     #e8cc88;
+  --gold-dim:      #7a5e20;
+  --green-vivid:   #1d7a44;
+  --green-soft:    #24944f;
+  --text-1:        #eee5cc;
+  --text-2:        #a89870;
+  --text-3:        #6a5e42;
+  --text-inv:      #0c1a12;
+  --radius-sm:     8px;
+  --radius-md:     12px;
+  --radius-lg:     18px;
+  --radius-xl:     24px;
+  --radius-full:   9999px;
+  --shadow-gold:   0 0 40px rgba(201,151,58,0.18);
+  --shadow-deep:   0 8px 32px rgba(0,0,0,0.5);
+  --transition:    all 0.2s cubic-bezier(0.4,0,0.2,1);
+  --font-ui:       'IBM Plex Sans Arabic', sans-serif;
+  --font-ar:       'Noto Naskh Arabic', serif;
+  --font-display:  'Amiri', serif;
+  --sidebar-w:     280px;
+}
+
+/* ============================================================
+   RESET & BASE
+   ============================================================ */
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html { font-size:16px; scroll-behavior:smooth; }
+body {
+  font-family: var(--font-ui);
+  background: var(--bg-base);
+  color: var(--text-1);
+  min-height: 100vh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Subtle noise texture overlay */
+body::after {
+  content:'';
+  position:fixed; inset:0; pointer-events:none; z-index:0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");
+  opacity:0.4;
+}
+
+/* Islamic geometric pattern bg */
+body::before {
+  content:'';
+  position:fixed; inset:0; pointer-events:none; z-index:0;
+  background-image:
+    radial-gradient(ellipse 80% 50% at 10% 50%, rgba(29,122,68,0.07) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 90% 10%, rgba(201,151,58,0.06) 0%, transparent 50%),
+    url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='rgba(201,151,58,0.035)' stroke-width='0.5'%3E%3Cpath d='M40 0 L80 40 L40 80 L0 40 Z'/%3E%3Cpath d='M40 20 L60 40 L40 60 L20 40 Z'/%3E%3Cline x1='40' y1='0' x2='40' y2='80'/%3E%3Cline x1='0' y1='40' x2='80' y2='40'/%3E%3C/g%3E%3C/svg%3E");
+  background-size: auto, auto, 80px 80px;
+}
+
+/* ============================================================
+   SCROLLBAR
+   ============================================================ */
+::-webkit-scrollbar { width:5px; height:5px; }
+::-webkit-scrollbar-track { background:transparent; }
+::-webkit-scrollbar-thumb { background:var(--gold-dim); border-radius:var(--radius-full); }
+::-webkit-scrollbar-thumb:hover { background:var(--gold-vivid); }
+
+/* ============================================================
+   LAYOUT SHELL
+   ============================================================ */
+#app {
+  position:relative; z-index:1;
+  display:flex; height:100vh; overflow:hidden;
+}
+
+/* ============================================================
+   SIDEBAR
+   ============================================================ */
+.sidebar {
+  width: var(--sidebar-w);
+  flex-shrink:0;
+  display:flex;
+  flex-direction:column;
+  background: var(--bg-elevated);
+  border-left: 1px solid var(--border-subtle);
+  height:100vh;
+  overflow:hidden;
+  transition: width 0.3s cubic-bezier(0.4,0,0.2,1);
+}
+
+.sidebar.collapsed { width:0; }
+
+.sidebar-header {
+  padding:20px 18px 16px;
+  border-bottom:1px solid var(--border-subtle);
+  display:flex; align-items:center; gap:12px;
+}
+
+.logo-mark {
+  width:40px; height:40px; border-radius:12px; flex-shrink:0;
+  background: linear-gradient(135deg, var(--gold-vivid), var(--gold-dim));
+  display:flex; align-items:center; justify-content:center;
+  font-size:18px; box-shadow: 0 0 20px rgba(201,151,58,0.35);
+  animation: logoGlow 4s ease-in-out infinite;
+}
+
+@keyframes logoGlow {
+  0%,100% { box-shadow:0 0 20px rgba(201,151,58,0.35); }
+  50% { box-shadow:0 0 35px rgba(201,151,58,0.6); }
+}
+
+.logo-text { min-width:0; }
+.logo-title {
+  font-family: var(--font-display);
+  font-size:1.15rem; color:var(--gold-soft); line-height:1.1;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.logo-sub { font-size:0.68rem; color:var(--text-3); margin-top:2px; }
+
+/* New chat btn */
+.new-chat-btn {
+  margin:12px 12px 0;
+  padding:10px 16px;
+  background: rgba(201,151,58,0.1);
+  border:1px solid var(--border-mid);
+  border-radius:var(--radius-md);
+  color:var(--gold-soft);
+  font-family:var(--font-ui);
+  font-size:0.88rem; font-weight:600;
+  cursor:pointer; display:flex; align-items:center; gap:10px;
+  transition:var(--transition);
+  width:calc(100% - 24px);
+}
+.new-chat-btn:hover { background:rgba(201,151,58,0.18); border-color:var(--border-glow); }
+
+/* Sidebar nav */
+.sidebar-nav {
+  padding:10px 10px 0;
+  display:flex; flex-direction:column; gap:2px;
+}
+
+.nav-item {
+  display:flex; align-items:center; gap:10px;
+  padding:10px 12px;
+  border-radius:var(--radius-md);
+  cursor:pointer; font-size:0.875rem;
+  color:var(--text-2);
+  transition:var(--transition);
+  white-space:nowrap; overflow:hidden;
+  border:1px solid transparent;
+  user-select:none;
+}
+.nav-item:hover { background:var(--bg-surface); color:var(--text-1); }
+.nav-item.active { background:rgba(201,151,58,0.12); color:var(--gold-soft); border-color:var(--border-mid); }
+.nav-item .nav-icon { font-size:1rem; flex-shrink:0; }
+.nav-item .nav-label { flex:1; }
+.nav-item .nav-badge {
+  background:var(--gold-vivid); color:var(--text-inv);
+  font-size:0.65rem; font-weight:700;
+  padding:1px 6px; border-radius:var(--radius-full);
+}
+
+/* History */
+.sidebar-section {
+  padding:12px 12px 0;
+  font-size:0.7rem; font-weight:700;
+  color:var(--text-3); text-transform:uppercase; letter-spacing:0.1em;
+}
+
+.history-list {
+  padding:6px 10px;
+  display:flex; flex-direction:column; gap:1px;
+  flex:1; overflow-y:auto;
+}
+
+.history-item {
+  padding:9px 12px; border-radius:var(--radius-sm);
+  cursor:pointer; font-size:0.82rem; color:var(--text-2);
+  transition:var(--transition); overflow:hidden;
+  white-space:nowrap; text-overflow:ellipsis;
+  display:flex; align-items:center; gap:8px;
+}
+.history-item:hover { background:var(--bg-surface); color:var(--text-1); }
+.history-item .h-dot { width:5px; height:5px; border-radius:50%; background:var(--gold-dim); flex-shrink:0; }
+
+/* Sidebar footer */
+.sidebar-footer {
+  padding:12px;
+  border-top:1px solid var(--border-subtle);
+  margin-top:auto;
+}
+
+.user-card {
+  display:flex; align-items:center; gap:10px;
+  padding:10px 12px; border-radius:var(--radius-md);
+  background:var(--bg-surface); border:1px solid var(--border-subtle);
+  cursor:pointer; transition:var(--transition);
+}
+.user-card:hover { border-color:var(--border-mid); }
+
+.user-avatar {
+  width:34px; height:34px; border-radius:50%; flex-shrink:0;
+  background: linear-gradient(135deg, var(--green-vivid), var(--green-soft));
+  display:flex; align-items:center; justify-content:center;
+  font-size:14px; font-weight:700; color:#fff;
+}
+.user-info { flex:1; min-width:0; }
+.user-name { font-size:0.83rem; font-weight:600; color:var(--text-1); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.user-email { font-size:0.7rem; color:var(--text-3); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.user-menu-trigger { color:var(--text-3); font-size:0.85rem; }
+
+/* ============================================================
+   MAIN CONTENT
+   ============================================================ */
+.main-content {
+  flex:1; display:flex; flex-direction:column; height:100vh; overflow:hidden;
+  background:var(--bg-base);
+  min-width:0;
+}
+
+/* Top bar */
+.topbar {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:0 20px; height:56px; flex-shrink:0;
+  border-bottom:1px solid var(--border-subtle);
+  background:rgba(12,26,18,0.8); backdrop-filter:blur(12px);
+}
+
+.topbar-left { display:flex; align-items:center; gap:10px; }
+
+.topbar-toggle {
+  width:36px; height:36px; border-radius:var(--radius-sm);
+  background:transparent; border:1px solid var(--border-subtle);
+  color:var(--text-3); cursor:pointer; font-size:1rem;
+  display:flex; align-items:center; justify-content:center;
+  transition:var(--transition);
+}
+.topbar-toggle:hover { background:var(--bg-surface); color:var(--text-1); border-color:var(--border-mid); }
+
+.topbar-title {
+  font-size:0.9rem; font-weight:600; color:var(--text-2);
+  display:flex; align-items:center; gap:8px;
+}
+.model-badge {
+  padding:3px 10px; border-radius:var(--radius-full);
+  background:rgba(201,151,58,0.12); border:1px solid var(--border-mid);
+  font-size:0.7rem; color:var(--gold-soft); font-weight:600;
+}
+
+.topbar-right { display:flex; align-items:center; gap:8px; }
+
+.topbar-btn {
+  padding:7px 16px; border-radius:var(--radius-sm);
+  font-family:var(--font-ui); font-size:0.82rem; font-weight:600;
+  cursor:pointer; transition:var(--transition); border:1px solid var(--border-mid);
+}
+.topbar-btn.ghost { background:transparent; color:var(--text-2); }
+.topbar-btn.ghost:hover { background:var(--bg-surface); color:var(--text-1); }
+.topbar-btn.primary {
+  background: linear-gradient(135deg, var(--gold-vivid), var(--gold-dim));
+  color:var(--text-inv); border-color:transparent;
+}
+.topbar-btn.primary:hover { transform:translateY(-1px); box-shadow:var(--shadow-gold); }
+
+/* Logged-in user mini */
+.topbar-user {
+  display:flex; align-items:center; gap:8px; padding:5px 12px;
+  border-radius:var(--radius-sm); cursor:pointer;
+  background:var(--bg-surface); border:1px solid var(--border-subtle);
+  transition:var(--transition); display:none;
+}
+.topbar-user:hover { border-color:var(--border-mid); }
+.topbar-user .ta { width:28px; height:28px; border-radius:50%; background:linear-gradient(135deg,var(--green-vivid),var(--green-soft)); display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; color:#fff; }
+.topbar-user .tn { font-size:0.82rem; color:var(--text-1); }
+
+/* ============================================================
+   SECTIONS (pages)
+   ============================================================ */
+.section { display:none; flex:1; overflow:hidden; flex-direction:column; }
+.section.active { display:flex; }
+
+/* ============================================================
+   CHAT SECTION
+   ============================================================ */
+#sec-chat { position:relative; }
+
+/* Chat messages area */
+.chat-viewport {
+  flex:1; overflow-y:auto; padding:0;
+  display:flex; flex-direction:column;
+}
+
+/* Welcome screen */
+.welcome-screen {
+  flex:1; display:flex; flex-direction:column; align-items:center;
+  justify-content:center; padding:40px 24px; text-align:center;
+  max-width:680px; margin:0 auto; width:100%;
+}
+
+.welcome-ornament {
+  font-size:2.5rem; margin-bottom:20px;
+  animation: floatOrnament 4s ease-in-out infinite;
+}
+@keyframes floatOrnament {
+  0%,100% { transform:translateY(0); }
+  50% { transform:translateY(-8px); }
+}
+
+.welcome-basmala {
+  font-family:var(--font-display);
+  font-size:1.8rem; color:var(--gold-soft);
+  margin-bottom:8px; line-height:1.4;
+}
+
+.welcome-title {
+  font-size:2rem; font-weight:700; color:var(--text-1);
+  margin-bottom:12px; line-height:1.2;
+}
+
+.welcome-desc {
+  font-size:0.95rem; color:var(--text-2); line-height:1.7;
+  max-width:480px; margin-bottom:36px;
+}
+
+/* Suggestion grid */
+.suggestions-grid {
+  display:grid; grid-template-columns:1fr 1fr;
+  gap:10px; width:100%; max-width:600px;
+}
+
+.suggestion-card {
+  padding:14px 16px; border-radius:var(--radius-md);
+  background:var(--bg-elevated); border:1px solid var(--border-subtle);
+  cursor:pointer; text-align:right; transition:var(--transition);
+  display:flex; align-items:flex-start; gap:10px;
+}
+.suggestion-card:hover {
+  background:var(--bg-surface); border-color:var(--border-mid);
+  transform:translateY(-2px); box-shadow:var(--shadow-deep);
+}
+.suggestion-card .sc-icon { font-size:1.2rem; flex-shrink:0; margin-top:1px; }
+.suggestion-card .sc-text { font-size:0.83rem; color:var(--text-2); line-height:1.5; }
+.suggestion-card:hover .sc-text { color:var(--text-1); }
+
+/* Messages */
+.messages-list {
+  flex:1; padding:20px 0;
+  display:flex; flex-direction:column;
+}
+
+.msg-row {
+  display:flex; padding:16px 0;
+  animation:msgIn 0.3s ease-out;
+}
+@keyframes msgIn {
+  from { opacity:0; transform:translateY(12px); }
+  to { opacity:1; transform:translateY(0); }
+}
+
+.msg-row.user { flex-direction:row-reverse; }
+
+.msg-inner {
+  max-width:760px; width:100%; margin:0 auto;
+  display:flex; gap:14px; padding:0 24px;
+}
+.msg-row.user .msg-inner { flex-direction:row-reverse; }
+
+.msg-avatar-wrap {
+  width:36px; height:36px; flex-shrink:0;
+  border-radius:50%; overflow:hidden; margin-top:2px;
+}
+
+.msg-avatar-ai {
+  width:100%; height:100%;
+  background:linear-gradient(135deg, var(--gold-vivid), var(--gold-dim));
+  display:flex; align-items:center; justify-content:center;
+  font-size:15px; box-shadow:0 0 15px rgba(201,151,58,0.3);
+}
+
+.msg-avatar-user {
+  width:100%; height:100%;
+  background:linear-gradient(135deg, var(--green-vivid), var(--green-soft));
+  display:flex; align-items:center; justify-content:center;
+  font-size:13px; font-weight:700; color:#fff;
+}
+
+.msg-content-wrap { flex:1; min-width:0; }
+.msg-sender-name { font-size:0.75rem; font-weight:600; color:var(--text-3); margin-bottom:6px; }
+.msg-row.user .msg-sender-name { text-align:left; }
+
+.msg-bubble {
+  padding:16px 20px; border-radius:var(--radius-lg);
+  line-height:1.75; font-size:0.92rem;
+}
+
+.msg-row.user .msg-bubble {
+  background:var(--bg-overlay); border:1px solid var(--border-subtle);
+  border-radius:var(--radius-lg) 6px var(--radius-lg) var(--radius-lg);
+  color:var(--text-1); max-width:480px; margin-right:auto;
+}
+
+.msg-row.ai .msg-bubble {
+  background:transparent; border:none; padding:0; color:var(--text-1);
+}
+
+/* Answer formatting */
+.ans-verdict-pill {
+  display:inline-flex; align-items:center; gap:6px;
+  padding:5px 14px; border-radius:var(--radius-full);
+  background:linear-gradient(135deg, rgba(201,151,58,0.2), rgba(122,94,32,0.2));
+  border:1px solid var(--border-mid);
+  font-size:0.78rem; font-weight:700; color:var(--gold-soft);
+  margin-bottom:14px;
+}
+
+.ans-verdict-text {
+  font-size:1.05rem; font-weight:600; color:var(--text-1);
+  margin-bottom:18px; line-height:1.6;
+}
+
+.ans-block {
+  margin-bottom:14px; border-radius:var(--radius-md);
+  overflow:hidden; border:1px solid var(--border-subtle);
+}
+
+.ans-block-header {
+  display:flex; align-items:center; gap:8px;
+  padding:10px 16px; font-size:0.75rem; font-weight:700;
+  text-transform:uppercase; letter-spacing:0.07em;
+  border-bottom:1px solid var(--border-subtle);
+}
+
+.ans-block.quran .ans-block-header { background:rgba(29,122,68,0.15); color:#6dd897; }
+.ans-block.hadith .ans-block-header { background:rgba(201,151,58,0.12); color:var(--gold-soft); }
+.ans-block.explain .ans-block-header { background:rgba(255,255,255,0.04); color:var(--text-2); }
+.ans-block.scholars .ans-block-header { background:rgba(100,130,200,0.1); color:#9bb5f0; }
+
+.ans-block-body { padding:14px 16px; background:rgba(0,0,0,0.2); }
+
+.quran-text {
+  font-family:var(--font-ar);
+  font-size:1.25rem; color:var(--text-1);
+  line-height:2; direction:rtl; text-align:right;
+  margin-bottom:8px;
+}
+.quran-ref { font-size:0.75rem; color:var(--gold-dim); }
+
+.hadith-text {
+  font-family:var(--font-ar);
+  font-size:1.05rem; color:var(--text-1);
+  line-height:1.9; direction:rtl; text-align:right;
+  margin-bottom:10px;
+}
+.hadith-meta { display:flex; gap:6px; flex-wrap:wrap; }
+
+.hbadge {
+  padding:3px 10px; border-radius:var(--radius-full);
+  font-size:0.71rem; font-weight:700;
+}
+.hbadge.sahih { background:rgba(29,122,68,0.35); color:#6dd897; border:1px solid rgba(109,216,151,0.3); }
+.hbadge.source { background:rgba(201,151,58,0.15); color:var(--gold-soft); border:1px solid var(--border-mid); }
+
+.explain-text {
+  font-size:0.9rem; color:var(--text-2); line-height:1.8;
+  white-space:pre-wrap;
+}
+
+.scholars-list { display:flex; flex-direction:column; gap:8px; }
+.scholar-row {
+  display:flex; gap:10px; align-items:flex-start;
+  padding:8px 0; border-bottom:1px solid var(--border-subtle);
+}
+.scholar-row:last-child { border-bottom:none; }
+.school-name { font-size:0.78rem; font-weight:700; color:var(--gold-soft); flex-shrink:0; min-width:90px; }
+.school-opinion { font-size:0.85rem; color:var(--text-2); line-height:1.6; }
+
+/* Sources footer */
+.ans-sources {
+  margin-top:14px; padding:12px 16px;
+  background:var(--bg-surface); border-radius:var(--radius-md);
+  border:1px solid var(--border-subtle);
+}
+.ans-sources-title { font-size:0.72rem; color:var(--text-3); margin-bottom:8px; font-weight:600; text-transform:uppercase; letter-spacing:0.08em; }
+.ans-links { display:flex; flex-wrap:wrap; gap:6px; }
+.ans-link {
+  padding:4px 12px; border-radius:var(--radius-full);
+  background:rgba(201,151,58,0.1); border:1px solid var(--border-mid);
+  color:var(--gold-soft); font-size:0.75rem; text-decoration:none;
+  transition:var(--transition); display:flex; align-items:center; gap:5px;
+}
+.ans-link:hover { background:rgba(201,151,58,0.2); }
+
+/* Message actions */
+.msg-actions {
+  display:flex; gap:4px; margin-top:12px; flex-wrap:wrap;
+}
+.msg-act-btn {
+  padding:5px 12px; border-radius:var(--radius-sm);
+  background:transparent; border:1px solid var(--border-subtle);
+  color:var(--text-3); font-size:0.74rem; cursor:pointer;
+  font-family:var(--font-ui); transition:var(--transition);
+  display:flex; align-items:center; gap:5px;
+}
+.msg-act-btn:hover { background:var(--bg-surface); color:var(--text-1); border-color:var(--border-mid); }
+.msg-act-btn.copied { color:#6dd897; border-color:rgba(109,216,151,0.3); }
+
+/* Streaming cursor */
+.stream-cursor {
+  display:inline-block; width:2px; height:1em;
+  background:var(--gold-vivid); border-radius:1px;
+  animation:blink 1s step-end infinite; vertical-align:text-bottom;
+}
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+/* Typing indicator */
+.typing-row { display:flex; padding:16px 24px; max-width:760px; margin:0 auto; width:100%; gap:14px; }
+.typing-dots { display:flex; gap:5px; align-items:center; padding:12px 16px; }
+.typing-dot {
+  width:7px; height:7px; border-radius:50%;
+  background:var(--gold-soft); opacity:0.5;
+  animation:typeBounce 1.4s ease-in-out infinite;
+}
+.typing-dot:nth-child(2) { animation-delay:0.15s; }
+.typing-dot:nth-child(3) { animation-delay:0.3s; }
+@keyframes typeBounce {
+  0%,60%,100% { transform:translateY(0); opacity:0.5; }
+  30% { transform:translateY(-6px); opacity:1; }
+}
+.typing-label { font-size:0.8rem; color:var(--text-3); display:flex; align-items:center; gap:8px; }
+
+/* ============================================================
+   CHAT INPUT
+   ============================================================ */
+.input-zone {
+  flex-shrink:0; padding:16px 24px 20px;
+  border-top:1px solid var(--border-subtle);
+  background:var(--bg-base);
+}
+
+.input-container {
+  max-width:760px; margin:0 auto;
+}
+
+.input-box {
+  background:var(--bg-elevated);
+  border:1px solid var(--border-mid);
+  border-radius:var(--radius-lg);
+  transition:var(--transition);
+  overflow:hidden;
+}
+.input-box:focus-within { border-color:var(--border-glow); box-shadow:0 0 0 3px rgba(201,151,58,0.08); }
+
+.input-toolbar-top {
+  display:flex; gap:4px; padding:10px 14px 6px;
+  border-bottom:1px solid var(--border-subtle);
+  flex-wrap:wrap;
+}
+
+.it-btn {
+  padding:5px 12px; border-radius:var(--radius-sm);
+  background:transparent; border:1px solid transparent;
+  color:var(--text-3); font-size:0.77rem; cursor:pointer;
+  font-family:var(--font-ui); font-weight:500;
+  transition:var(--transition); display:flex; align-items:center; gap:5px;
+}
+.it-btn:hover { background:var(--bg-surface); color:var(--text-2); border-color:var(--border-subtle); }
+.it-btn.active-mode { background:rgba(201,151,58,0.12); color:var(--gold-soft); border-color:var(--border-mid); }
+
+.input-row { display:flex; align-items:flex-end; padding:10px 14px; gap:10px; }
+
+.chat-textarea {
+  flex:1; background:transparent; border:none; outline:none;
+  color:var(--text-1); font-family:var(--font-ui); font-size:0.95rem;
+  resize:none; min-height:24px; max-height:200px; line-height:1.6;
+  scrollbar-width:none;
+}
+.chat-textarea::placeholder { color:var(--text-3); }
+.chat-textarea::-webkit-scrollbar { display:none; }
+
+.send-btn {
+  width:38px; height:38px; flex-shrink:0;
+  border-radius:10px; border:none; cursor:pointer;
+  display:flex; align-items:center; justify-content:center;
+  font-size:1rem; transition:var(--transition);
+  background:linear-gradient(135deg, var(--gold-vivid), var(--gold-dim));
+  color:var(--text-inv);
+}
+.send-btn:hover { transform:scale(1.05); box-shadow:var(--shadow-gold); }
+.send-btn:disabled { opacity:0.5; cursor:not-allowed; transform:none; }
+
+.input-footer {
+  display:flex; justify-content:space-between; align-items:center;
+  margin-top:8px; padding:0 2px;
+}
+.input-disclaimer { font-size:0.71rem; color:var(--text-3); }
+.char-counter { font-size:0.71rem; color:var(--text-3); }
+
+/* ============================================================
+   QURAN SEARCH SECTION
+   ============================================================ */
+#sec-quran {
+  flex-direction:column; overflow:hidden;
+}
+
+.section-header {
+  padding:24px 28px 20px; border-bottom:1px solid var(--border-subtle); flex-shrink:0;
+}
+.section-title {
+  font-family:var(--font-display); font-size:1.6rem; color:var(--gold-soft); margin-bottom:4px;
+}
+.section-sub { font-size:0.85rem; color:var(--text-2); }
+
+.quran-search-bar {
+  padding:16px 28px; border-bottom:1px solid var(--border-subtle); flex-shrink:0;
+  display:flex; gap:10px;
+}
+
+.qs-input {
+  flex:1; background:var(--bg-elevated); border:1px solid var(--border-mid);
+  border-radius:var(--radius-md); padding:12px 18px;
+  color:var(--text-1); font-family:var(--font-ar); font-size:1.05rem;
+  outline:none; transition:var(--transition);
+}
+.qs-input:focus { border-color:var(--border-glow); box-shadow:0 0 0 3px rgba(201,151,58,0.08); }
+.qs-input::placeholder { color:var(--text-3); font-family:var(--font-ui); font-size:0.9rem; }
+
+.qs-btn {
+  padding:12px 24px; border-radius:var(--radius-md);
+  background:linear-gradient(135deg, var(--gold-vivid), var(--gold-dim));
+  border:none; color:var(--text-inv); font-family:var(--font-ui);
+  font-size:0.9rem; font-weight:700; cursor:pointer; transition:var(--transition);
+}
+.qs-btn:hover { transform:translateY(-1px); box-shadow:var(--shadow-gold); }
+
+.quran-results {
+  flex:1; overflow-y:auto; padding:20px 28px;
+}
+
+.quran-verse-card {
+  background:var(--bg-elevated); border:1px solid var(--border-subtle);
+  border-radius:var(--radius-lg); padding:24px; margin-bottom:14px;
+  transition:var(--transition);
+}
+.quran-verse-card:hover { border-color:var(--border-mid); }
+
+.qvc-meta {
+  display:flex; align-items:center; gap:10px; margin-bottom:14px;
+}
+.qvc-num {
+  width:34px; height:34px; border-radius:50% ;
+  background:linear-gradient(135deg, var(--gold-vivid), var(--gold-dim));
+  display:flex; align-items:center; justify-content:center;
+  font-family:var(--font-display); font-size:0.85rem; color:var(--text-inv); font-weight:700;
+}
+.qvc-ref { font-size:0.8rem; color:var(--text-3); }
+.qvc-surah { font-size:0.85rem; color:var(--gold-soft); font-weight:600; }
+
+.qvc-arabic {
+  font-family:var(--font-ar); font-size:1.4rem; color:var(--text-1);
+  line-height:2.1; text-align:justify; direction:rtl;
+  margin-bottom:14px; padding:16px; background:rgba(0,0,0,0.2);
+  border-radius:var(--radius-md); border-right:3px solid var(--gold-vivid);
+}
+
+.qvc-tafsir {
+  font-size:0.87rem; color:var(--text-2); line-height:1.8;
+  padding:12px 16px; background:rgba(29,122,68,0.08);
+  border-radius:var(--radius-md);
+}
+.qvc-tafsir-label { font-size:0.72rem; font-weight:700; color:var(--green-soft); margin-bottom:6px; text-transform:uppercase; letter-spacing:0.07em; }
+
+.qvc-actions { display:flex; gap:6px; margin-top:14px; }
+
+/* ============================================================
+   HADITH SECTION
+   ============================================================ */
+#sec-hadith { flex-direction:column; overflow:hidden; }
+
+.hadith-books {
+  display:grid; grid-template-columns: repeat(3, 1fr);
+  gap:12px; padding:20px 28px; flex-shrink:0;
+  border-bottom:1px solid var(--border-subtle);
+}
+.hadith-book-btn {
+  padding:12px 16px; border-radius:var(--radius-md);
+  background:var(--bg-elevated); border:1px solid var(--border-subtle);
+  color:var(--text-2); font-family:var(--font-ui); font-size:0.82rem;
+  cursor:pointer; transition:var(--transition); text-align:center;
+}
+.hadith-book-btn:hover, .hadith-book-btn.active {
+  background:rgba(201,151,58,0.12); color:var(--gold-soft); border-color:var(--border-mid);
+}
+
+/* ============================================================
+   BOOKMARKS SECTION
+   ============================================================ */
+#sec-bookmarks { flex-direction:column; overflow:hidden; }
+.bookmarks-list { flex:1; overflow-y:auto; padding:20px 28px; }
+.bookmark-card {
+  background:var(--bg-elevated); border:1px solid var(--border-subtle);
+  border-radius:var(--radius-md); padding:18px 20px; margin-bottom:10px;
+  display:flex; gap:14px; align-items:flex-start;
+  transition:var(--transition);
+}
+.bookmark-card:hover { border-color:var(--border-mid); }
+.bk-icon { font-size:1.2rem; flex-shrink:0; margin-top:2px; }
+.bk-content { flex:1; min-width:0; }
+.bk-question { font-size:0.88rem; color:var(--text-1); font-weight:600; margin-bottom:4px; }
+.bk-date { font-size:0.72rem; color:var(--text-3); }
+.bk-del {
+  background:transparent; border:none; color:var(--text-3);
+  cursor:pointer; font-size:0.85rem; padding:4px; border-radius:6px;
+  transition:var(--transition);
+}
+.bk-del:hover { color:#f87171; background:rgba(248,113,113,0.1); }
+
+.empty-state {
+  text-align:center; padding:60px 24px; color:var(--text-3);
+}
+.empty-icon { font-size:3rem; margin-bottom:12px; opacity:0.5; }
+.empty-text { font-size:0.9rem; }
+
+/* ============================================================
+   ADMIN SECTION
+   ============================================================ */
+#sec-admin { flex-direction:column; overflow:hidden; }
+
+.admin-body { flex:1; overflow-y:auto; padding:24px 28px; }
+
+.admin-stats {
+  display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:24px;
+}
+.admin-stat {
+  background:var(--bg-elevated); border:1px solid var(--border-subtle);
+  border-radius:var(--radius-lg); padding:20px; text-align:center;
+}
+.admin-stat-num {
+  font-family:var(--font-display); font-size:2rem; font-weight:700;
+  color:var(--gold-soft); line-height:1;
+}
+.admin-stat-label { font-size:0.75rem; color:var(--text-3); margin-top:6px; }
+
+.admin-table-wrap {
+  background:var(--bg-elevated); border:1px solid var(--border-subtle);
+  border-radius:var(--radius-lg); overflow:hidden;
+}
+.admin-table-title {
+  padding:16px 20px; font-size:0.85rem; font-weight:700; color:var(--text-1);
+  border-bottom:1px solid var(--border-subtle);
+  display:flex; align-items:center; justify-content:space-between;
+}
+.admin-table { width:100%; border-collapse:collapse; }
+.admin-table th {
+  padding:12px 16px; text-align:right; font-size:0.72rem; font-weight:700;
+  color:var(--text-3); text-transform:uppercase; letter-spacing:0.08em;
+  background:rgba(0,0,0,0.2); border-bottom:1px solid var(--border-subtle);
+}
+.admin-table td {
+  padding:13px 16px; font-size:0.83rem; color:var(--text-2);
+  border-bottom:1px solid var(--border-subtle);
+}
+.admin-table tr:last-child td { border-bottom:none; }
+.admin-table tr:hover td { background:rgba(201,151,58,0.03); }
+
+.st-badge { padding:3px 10px; border-radius:var(--radius-full); font-size:0.71rem; font-weight:700; }
+.st-ok { background:rgba(29,122,68,0.3); color:#6dd897; }
+.st-rev { background:rgba(201,151,58,0.2); color:var(--gold-soft); }
+.st-blk { background:rgba(248,113,113,0.2); color:#f87171; }
+
+/* ============================================================
+   AUTH MODAL
+   ============================================================ */
+.overlay {
+  position:fixed; inset:0; z-index:1000;
+  background:rgba(0,0,0,0.75); backdrop-filter:blur(8px);
+  display:flex; align-items:center; justify-content:center;
+  opacity:0; pointer-events:none; transition:opacity 0.25s;
+}
+.overlay.open { opacity:1; pointer-events:all; }
+
+.modal {
+  background:var(--bg-elevated); border:1px solid var(--border-mid);
+  border-radius:var(--radius-xl); padding:36px;
+  width:100%; max-width:440px;
+  transform:scale(0.95) translateY(10px);
+  transition:transform 0.25s cubic-bezier(0.4,0,0.2,1);
+  position:relative; max-height:90vh; overflow-y:auto;
+}
+.overlay.open .modal { transform:scale(1) translateY(0); }
+
+.modal-close-btn {
+  position:absolute; top:14px; left:14px;
+  width:30px; height:30px; border-radius:50%;
+  background:var(--bg-surface); border:1px solid var(--border-subtle);
+  color:var(--text-3); cursor:pointer; font-size:0.9rem;
+  display:flex; align-items:center; justify-content:center;
+  transition:var(--transition);
+}
+.modal-close-btn:hover { color:var(--text-1); border-color:var(--border-mid); }
+
+.modal-logo { text-align:center; margin-bottom:24px; }
+.modal-logo-mark {
+  width:52px; height:52px; border-radius:14px; margin:0 auto 12px;
+  background:linear-gradient(135deg, var(--gold-vivid), var(--gold-dim));
+  display:flex; align-items:center; justify-content:center;
+  font-size:24px; box-shadow:0 0 25px rgba(201,151,58,0.4);
+}
+.modal-title { font-family:var(--font-display); font-size:1.4rem; color:var(--gold-soft); }
+.modal-sub { font-size:0.82rem; color:var(--text-3); margin-top:4px; }
+
+.modal-tabs { display:flex; margin-bottom:24px; background:var(--bg-surface); border-radius:var(--radius-md); padding:3px; }
+.modal-tab {
+  flex:1; padding:9px; border-radius:var(--radius-sm);
+  background:transparent; border:none; color:var(--text-3);
+  font-family:var(--font-ui); font-size:0.85rem; font-weight:600;
+  cursor:pointer; transition:var(--transition);
+}
+.modal-tab.active { background:var(--bg-elevated); color:var(--gold-soft); box-shadow:var(--shadow-deep); }
+
+.form-group { margin-bottom:16px; }
+.form-label { display:block; font-size:0.8rem; font-weight:600; color:var(--text-2); margin-bottom:7px; }
+
+.form-input {
+  width:100%; background:var(--bg-input); border:1px solid var(--border-mid);
+  border-radius:var(--radius-md); padding:11px 14px;
+  color:var(--text-1); font-family:var(--font-ui); font-size:0.9rem;
+  outline:none; transition:var(--transition);
+}
+.form-input:focus { border-color:var(--border-glow); box-shadow:0 0 0 3px rgba(201,151,58,0.1); }
+.form-input::placeholder { color:var(--text-3); }
+
+.form-error {
+  margin-bottom:14px; padding:10px 14px; border-radius:var(--radius-sm);
+  background:rgba(248,113,113,0.1); border:1px solid rgba(248,113,113,0.3);
+  color:#f87171; font-size:0.82rem; display:none;
+}
+
+.form-submit {
+  width:100%; padding:13px; border-radius:var(--radius-md);
+  background:linear-gradient(135deg, var(--gold-vivid), var(--gold-dim));
+  border:none; color:var(--text-inv); font-family:var(--font-ui);
+  font-size:0.95rem; font-weight:700; cursor:pointer; transition:var(--transition);
+  margin-top:4px;
+}
+.form-submit:hover { transform:translateY(-1px); box-shadow:var(--shadow-gold); }
+.form-submit:disabled { opacity:0.7; cursor:not-allowed; transform:none; }
+
+.form-divider {
+  text-align:center; font-size:0.75rem; color:var(--text-3);
+  margin:12px 0; position:relative;
+}
+.form-divider::before {
+  content:''; position:absolute; top:50%; left:0; right:0; height:1px;
+  background:var(--border-subtle);
+}
+.form-divider span { background:var(--bg-elevated); padding:0 10px; position:relative; }
+
+/* Password strength */
+.pw-strength { margin-top:6px; }
+.pw-bar { height:3px; border-radius:2px; background:var(--bg-surface); overflow:hidden; }
+.pw-fill { height:100%; border-radius:2px; transition:all 0.3s; }
+.pw-label { font-size:0.68rem; color:var(--text-3); margin-top:3px; }
+
+/* ============================================================
+   USER DROPDOWN
+   ============================================================ */
+.user-dropdown {
+  position:fixed; z-index:500;
+  background:var(--bg-elevated); border:1px solid var(--border-mid);
+  border-radius:var(--radius-lg); padding:6px;
+  min-width:200px; box-shadow:var(--shadow-deep);
+  display:none;
+}
+.user-dropdown.open { display:block; animation:dropIn 0.15s ease-out; }
+@keyframes dropIn {
+  from { opacity:0; transform:translateY(-6px) scale(0.97); }
+  to { opacity:1; transform:translateY(0) scale(1); }
+}
+.dd-item {
+  display:flex; align-items:center; gap:10px;
+  padding:9px 12px; border-radius:var(--radius-sm);
+  cursor:pointer; font-size:0.84rem; color:var(--text-2);
+  transition:var(--transition);
+}
+.dd-item:hover { background:var(--bg-surface); color:var(--text-1); }
+.dd-item.danger { color:#f87171; }
+.dd-item.danger:hover { background:rgba(248,113,113,0.1); }
+.dd-divider { height:1px; background:var(--border-subtle); margin:4px 0; }
+
+/* ============================================================
+   TOAST
+   ============================================================ */
+.toast-container {
+  position:fixed; bottom:24px; left:50%; transform:translateX(-50%);
+  z-index:2000; display:flex; flex-direction:column; align-items:center; gap:8px;
+}
+
+.toast {
+  padding:11px 20px; border-radius:var(--radius-md);
+  background:var(--bg-elevated); border:1px solid var(--border-mid);
+  color:var(--text-1); font-size:0.85rem; font-weight:500;
+  box-shadow:var(--shadow-deep); display:flex; align-items:center; gap:8px;
+  animation:toastIn 0.25s ease-out;
+  max-width:380px; text-align:center;
+}
+@keyframes toastIn {
+  from { opacity:0; transform:translateY(15px); }
+  to { opacity:1; transform:translateY(0); }
+}
+.toast.success .toast-icon { color:#6dd897; }
+.toast.error .toast-icon { color:#f87171; }
+.toast.info .toast-icon { color:var(--gold-soft); }
+
+/* ============================================================
+   PROGRESS / LOADING
+   ============================================================ */
+.loading-bar {
+  position:fixed; top:0; left:0; right:0; height:2px; z-index:3000;
+  background:linear-gradient(90deg, var(--gold-vivid), var(--gold-soft));
+  transform:scaleX(0); transform-origin:right;
+  transition:transform 0.4s ease;
+}
+.loading-bar.active { transform:scaleX(1); }
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width:900px) {
+  .sidebar { position:fixed; z-index:200; height:100vh; left:0; top:0; }
+  .sidebar:not(.open) { width:0; }
+  .sidebar.open { width:var(--sidebar-w); }
+  .main-content { margin-right:0 !important; }
+  .admin-stats { grid-template-columns:1fr 1fr; }
+  .hadith-books { grid-template-columns:1fr 1fr; }
+}
+
+@media (max-width:600px) {
+  .suggestions-grid { grid-template-columns:1fr; }
+  .welcome-title { font-size:1.4rem; }
+  .admin-stats { grid-template-columns:1fr 1fr; }
+  .modal { padding:24px 20px; }
+  .quran-search-bar { flex-direction:column; }
+}
+</style>
+</head>
+<body>
+
+<!-- Loading bar -->
+<div class="loading-bar" id="loadingBar"></div>
+
+<!-- Toast container -->
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- Auth Modal -->
+<div class="overlay" id="authOverlay">
+  <div class="modal">
+    <button class="modal-close-btn" onclick="closeModal()">✕</button>
+    <div class="modal-logo">
+      <div class="modal-logo-mark">☪</div>
+      <div class="modal-title">نور العِلم</div>
+      <div class="modal-sub">منصة العلوم الإسلامية بالذكاء الاصطناعي</div>
+    </div>
+
+    <div class="modal-tabs">
+      <button class="modal-tab active" id="tab-login" onclick="switchTab('login')">تسجيل الدخول</button>
+      <button class="modal-tab" id="tab-register" onclick="switchTab('register')">إنشاء حساب</button>
+    </div>
+
+    <!-- Error -->
+    <div class="form-error" id="auth-error"></div>
+
+    <!-- Login Form -->
+    <div id="form-login">
+      <div class="form-group">
+        <label class="form-label">البريد الإلكتروني</label>
+        <input type="email" class="form-input" id="login-email" placeholder="example@email.com" onkeydown="if(event.key==='Enter')doLogin()">
+      </div>
+      <div class="form-group">
+        <label class="form-label">كلمة المرور</label>
+        <input type="password" class="form-input" id="login-pass" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()">
+      </div>
+      <button class="form-submit" id="auth-btn-login" onclick="doLogin()">تسجيل الدخول</button>
+    </div>
+
+    <!-- Register Form -->
+    <div id="form-register" style="display:none">
+      <div class="form-group">
+        <label class="form-label">الاسم الكامل</label>
+        <input type="text" class="form-input" id="reg-name" placeholder="أدخل اسمك">
+      </div>
+      <div class="form-group">
+        <label class="form-label">البريد الإلكتروني</label>
+        <input type="email" class="form-input" id="reg-email" placeholder="example@email.com">
+      </div>
+      <div class="form-group">
+        <label class="form-label">كلمة المرور</label>
+        <input type="password" class="form-input" id="reg-pass" placeholder="6 أحرف على الأقل" oninput="checkPwStrength(this.value)">
+        <div class="pw-strength">
+          <div class="pw-bar"><div class="pw-fill" id="pw-fill" style="width:0;background:#f87171;"></div></div>
+          <div class="pw-label" id="pw-label"></div>
+        </div>
+      </div>
+      <button class="form-submit" id="auth-btn-register" onclick="doRegister()">إنشاء الحساب</button>
+    </div>
+  </div>
+</div>
+
+<!-- User Dropdown -->
+<div class="user-dropdown" id="userDropdown">
+  <div class="dd-item" onclick="showSection('bookmarks');closeDropdown()">⭐ محفوظاتي</div>
+  <div class="dd-divider"></div>
+  <div class="dd-item danger" onclick="doLogout();closeDropdown()">🚪 تسجيل الخروج</div>
+</div>
+
+<!-- APP -->
+<div id="app">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="logo-mark">☪</div>
+      <div class="logo-text">
+        <div class="logo-title">نور العِلم</div>
+        <div class="logo-sub">منصة العلوم الإسلامية</div>
+      </div>
+    </div>
+
+    <button class="new-chat-btn" onclick="newChat()">
+      <span>✏️</span> محادثة جديدة
+    </button>
+
+    <div class="sidebar-nav">
+      <div class="nav-item active" onclick="showSection('chat')">
+        <span class="nav-icon">💬</span>
+        <span class="nav-label">الدردشة الفقهية</span>
+      </div>
+      <div class="nav-item" onclick="showSection('quran')">
+        <span class="nav-icon">📖</span>
+        <span class="nav-label">البحث القرآني</span>
+      </div>
+      <div class="nav-item" onclick="showSection('hadith')">
+        <span class="nav-icon">📜</span>
+        <span class="nav-label">كتب الحديث</span>
+      </div>
+      <div class="nav-item" onclick="showSection('bookmarks')">
+        <span class="nav-icon">⭐</span>
+        <span class="nav-label">المحفوظات</span>
+      </div>
+      <div class="nav-item" id="admin-nav-item" onclick="showSection('admin')" style="display:none">
+        <span class="nav-icon">⚙️</span>
+        <span class="nav-label">الإدارة</span>
+        <span class="nav-badge" id="adminBadge">0</span>
+      </div>
+    </div>
+
+    <div class="sidebar-section" style="margin-top:16px;">المحادثات الأخيرة</div>
+    <div class="history-list" id="historyList">
+      <div class="history-item" style="color:var(--text-3); font-size:0.78rem; padding:16px 12px;">لا توجد محادثات سابقة</div>
+    </div>
+
+    <!-- User card (logged in) -->
+    <div class="sidebar-footer" id="sidebarFooter" style="display:none">
+      <div class="user-card" onclick="toggleDropdown(event)">
+        <div class="user-avatar" id="sidebarAvatar">؟</div>
+        <div class="user-info">
+          <div class="user-name" id="sidebarName">المستخدم</div>
+          <div class="user-email" id="sidebarEmail">-</div>
+        </div>
+        <div class="user-menu-trigger">⋮</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <div class="main-content" id="mainContent">
+
+    <!-- TOP BAR -->
+    <div class="topbar">
+      <div class="topbar-left">
+        <button class="topbar-toggle" onclick="toggleSidebar()" title="القائمة الجانبية">☰</button>
+        <div class="topbar-title">
+          <span id="topbarTitle">الدردشة الفقهية</span>
+          <span class="model-badge">Claude Sonnet</span>
+        </div>
+      </div>
+      <div class="topbar-right" id="topbarRight">
+        <!-- Auth buttons (logged out) -->
+        <div id="auth-buttons">
+          <button class="topbar-btn ghost" onclick="openModal('login')">تسجيل الدخول</button>
+          <button class="topbar-btn primary" onclick="openModal('register')">إنشاء حساب مجاني</button>
+        </div>
+        <!-- User info (logged in) -->
+        <div id="topbar-user-info" style="display:none; align-items:center; gap:10px;">
+          <span style="font-size:0.82rem; color:var(--text-2);" id="topbarGreeting"></span>
+          <button class="topbar-btn ghost" onclick="doLogout()">تسجيل الخروج</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== CHAT SECTION ==================== -->
+    <div class="section active" id="sec-chat">
+      <div class="chat-viewport" id="chatViewport">
+
+        <!-- Welcome -->
+        <div class="welcome-screen" id="welcomeScreen">
+          <div class="welcome-ornament">☪</div>
+          <div class="welcome-basmala">بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ</div>
+          <h1 class="welcome-title">كيف يمكنني مساعدتك؟</h1>
+          <p class="welcome-desc">اسأل أي سؤال في الفقه الإسلامي، التفسير، الحديث، أو العقيدة — وسأُجيبك بأدلة موثقة من القرآن والسنة.</p>
+          <div class="suggestions-grid">
+            <div class="suggestion-card" onclick="fillQuestion('ما حكم قراءة القرآن الكريم بدون وضوء؟')">
+              <span class="sc-icon">🕌</span>
+              <span class="sc-text">ما حكم قراءة القرآن بدون وضوء؟</span>
+            </div>
+            <div class="suggestion-card" onclick="fillQuestion('ما هي شروط صحة الصلاة وأركانها؟')">
+              <span class="sc-icon">🙏</span>
+              <span class="sc-text">شروط صحة الصلاة وأركانها</span>
+            </div>
+            <div class="suggestion-card" onclick="fillQuestion('ما حكم الزكاة على المال المدخر؟ وما نصابها؟')">
+              <span class="sc-icon">💰</span>
+              <span class="sc-text">زكاة المال المدخر ونصابها</span>
+            </div>
+            <div class="suggestion-card" onclick="fillQuestion('ما الفرق بين المذاهب الفقهية الأربعة؟')">
+              <span class="sc-icon">📚</span>
+              <span class="sc-text">الفرق بين المذاهب الفقهية الأربعة</span>
+            </div>
+            <div class="suggestion-card" onclick="fillQuestion('ما أحكام صيام شهر رمضان ومبطلاته؟')">
+              <span class="sc-icon">🌙</span>
+              <span class="sc-text">أحكام الصيام ومبطلاته</span>
+            </div>
+            <div class="suggestion-card" onclick="fillQuestion('ما حكم الاحتفال بالمولد النبوي الشريف؟')">
+              <span class="sc-icon">⭐</span>
+              <span class="sc-text">حكم الاحتفال بالمولد النبوي</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Messages list -->
+        <div class="messages-list" id="messagesList" style="display:none;"></div>
+
+      </div>
+
+      <!-- INPUT ZONE -->
+      <div class="input-zone">
+        <div class="input-container">
+          <div class="input-box">
+            <div class="input-toolbar-top">
+              <button class="it-btn" id="mode-general" onclick="setMode('general')" title="وضع عام">📋 عام</button>
+              <button class="it-btn" id="mode-quran" onclick="setMode('quran')" title="بحث قرآني">📖 قرآن</button>
+              <button class="it-btn" id="mode-hadith" onclick="setMode('hadith')" title="بحث حديثي">📜 حديث</button>
+              <button class="it-btn" id="mode-fiqh" onclick="setMode('fiqh')" title="استفتاء فقهي">⚖️ فقه</button>
+              <div style="flex:1"></div>
+              <button class="it-btn" onclick="clearChat()" title="مسح المحادثة" style="color:var(--text-3)">🗑️ مسح</button>
+            </div>
+            <div class="input-row">
+              <textarea
+                class="chat-textarea"
+                id="chatInput"
+                placeholder="اسأل سؤالك الشرعي هنا..."
+                rows="1"
+                onkeydown="handleKeydown(event)"
+                oninput="autoResize(this)"
+              ></textarea>
+              <button class="send-btn" id="sendBtn" onclick="sendMessage()">➤</button>
+            </div>
+          </div>
+          <div class="input-footer">
+            <span class="input-disclaimer">⚠️ الإجابات للاستئناس العلمي. للفتوى الرسمية راجع العلماء المعتمدين.</span>
+            <span class="char-counter" id="charCounter">0 / 1000</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== QURAN SECTION ==================== -->
+    <div class="section" id="sec-quran">
+      <div class="section-header">
+        <div class="section-title">📖 البحث في القرآن الكريم</div>
+        <div class="section-sub">ابحث في آيات القرآن الكريم مع التفسير من ابن كثير</div>
+      </div>
+      <div class="quran-search-bar">
+        <input type="text" class="qs-input" id="quranInput" placeholder="ابحث بكلمة أو جزء من آية... مثال: الرحمة، الصبر، الجنة، لا إكراه" onkeydown="if(event.key==='Enter')searchQuran()">
+        <button class="qs-btn" onclick="searchQuran()">🔍 بحث</button>
+      </div>
+      <div class="quran-results" id="quranResults">
+        <div style="text-align:center; padding:60px; color:var(--text-3);">
+          <div style="font-size:3rem; margin-bottom:12px; opacity:0.4;">📖</div>
+          <div>اكتب كلمة للبحث في القرآن الكريم</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== HADITH SECTION ==================== -->
+    <div class="section" id="sec-hadith">
+      <div class="section-header">
+        <div class="section-title">📜 كتب الحديث الشريف</div>
+        <div class="section-sub">اختر الكتاب ثم ابحث في الأحاديث النبوية المشرفة</div>
+      </div>
+      <div class="hadith-books">
+        <button class="hadith-book-btn active" id="book-bukhari" onclick="selectBook('bukhari')">صحيح البخاري</button>
+        <button class="hadith-book-btn" id="book-muslim" onclick="selectBook('muslim')">صحيح مسلم</button>
+        <button class="hadith-book-btn" id="book-abudawud" onclick="selectBook('abudawud')">سنن أبي داود</button>
+        <button class="hadith-book-btn" id="book-tirmidhi" onclick="selectBook('tirmidhi')">سنن الترمذي</button>
+        <button class="hadith-book-btn" id="book-nasai" onclick="selectBook('nasai')">سنن النسائي</button>
+        <button class="hadith-book-btn" id="book-ibnmajah" onclick="selectBook('ibnmajah')">سنن ابن ماجة</button>
+      </div>
+      <div class="quran-search-bar">
+        <input type="text" class="qs-input" id="hadithInput" placeholder="ابحث في الأحاديث... مثال: الأعمال بالنيات، من غشنا" onkeydown="if(event.key==='Enter')searchHadith()">
+        <button class="qs-btn" onclick="searchHadith()">🔍 بحث</button>
+      </div>
+      <div class="quran-results" id="hadithResults">
+        <div style="text-align:center; padding:60px; color:var(--text-3);">
+          <div style="font-size:3rem; margin-bottom:12px; opacity:0.4;">📜</div>
+          <div>اختر الكتاب وابحث في الأحاديث النبوية</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== BOOKMARKS SECTION ==================== -->
+    <div class="section" id="sec-bookmarks">
+      <div class="section-header">
+        <div class="section-title">⭐ المحفوظات</div>
+        <div class="section-sub">الأسئلة والإجابات التي حفظتها</div>
+      </div>
+      <div class="bookmarks-list" id="bookmarksList">
+        <div class="empty-state">
+          <div class="empty-icon">⭐</div>
+          <div class="empty-text">لا توجد محفوظات بعد. احفظ الإجابات المهمة من المحادثة.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== ADMIN SECTION ==================== -->
+    <div class="section" id="sec-admin">
+      <div class="section-header">
+        <div class="section-title">⚙️ لوحة تحكم المشرف</div>
+        <div class="section-sub">إدارة المنصة ومراقبة الأسئلة</div>
+      </div>
+      <div class="admin-body">
+        <div class="admin-stats" id="adminStats">
+          <div class="admin-stat">
+            <div class="admin-stat-num" id="stat-questions">-</div>
+            <div class="admin-stat-label">إجمالي الأسئلة</div>
+          </div>
+          <div class="admin-stat">
+            <div class="admin-stat-num" id="stat-users">-</div>
+            <div class="admin-stat-label">المستخدمون</div>
+          </div>
+          <div class="admin-stat">
+            <div class="admin-stat-num" id="stat-pending">-</div>
+            <div class="admin-stat-label">تحتاج مراجعة</div>
+          </div>
+          <div class="admin-stat">
+            <div class="admin-stat-num">Claude</div>
+            <div class="admin-stat-label">محرك الذكاء الاصطناعي</div>
+          </div>
+        </div>
+        <div class="admin-table-wrap">
+          <div class="admin-table-title">
+            <span>سجل الأسئلة الأخيرة</span>
+            <button class="topbar-btn ghost" style="font-size:0.78rem;" onclick="loadAdminLogs()">🔄 تحديث</button>
+          </div>
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>السؤال</th>
+                <th>المستخدم</th>
+                <th>الوقت</th>
+                <th>الحالة</th>
+              </tr>
+            </thead>
+            <tbody id="adminLogsBody">
+              <tr><td colspan="4" style="text-align:center; padding:30px; color:var(--text-3);">جارٍ التحميل...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end main-content -->
+</div><!-- end #app -->
+
+<!-- ============================================================
+     FIREBASE + ANTHROPIC SCRIPTS
+     ============================================================ -->
+<script type="module">
+// ================================================================
+// 🔥 FIREBASE CONFIG — استبدل بإعداداتك الحقيقية من Firebase Console
+// ================================================================
+const FIREBASE_CONFIG = {
+  apiKey: "AIzaSyBWmPhxpq6Q7G7CRUaAfGBa18zs56wgD0",
+  authDomain: "noor-94b0d.firebaseapp.com",
+  projectId: "noor-94b0d",
+  storageBucket: "noor-94b0d.firebasestorage.app",
+  messagingSenderId: "440882728031",
+  appId: "1:440882728031:web:ba8236e66506dc18a01fea",
+  measurementId: "G-DPFKRHDGZ72"
+};
+
+// ================================================================
+// 🤖 ANTHROPIC API KEY — استبدل بمفتاحك من console.anthropic.com
+// ================================================================
+const ANTHROPIC_KEY = "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";
+
+// ================================================================
+// IMPORTS
+// ================================================================
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut,
+  onAuthStateChanged,
+  updateProfile
+} from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+import {
+  getFirestore,
+  collection, addDoc, getDocs, getDoc, setDoc, doc,
+  query, where, orderBy, limit, serverTimestamp, updateDoc
+} from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+// ================================================================
+// INIT
+// ================================================================
+const app  = initializeApp(FIREBASE_CONFIG);
+const auth = getAuth(app);
+const db   = getFirestore(app);
+
+// ================================================================
+// STATE
+// ================================================================
+let currentUser   = null;
+let userProfile   = null;
+let isAdmin       = false;
+let chatHistory   = [];
+let bookmarks     = [];
+let currentMode   = 'general';
+let selectedBook  = 'bukhari';
+let isSending     = false;
+
+// ================================================================
+// AUTH STATE
+// ================================================================
+onAuthStateChanged(auth, async (user) => {
+  if (user) {
+    currentUser = user;
+    const ref = doc(db, 'users', user.uid);
+    const snap = await getDoc(ref);
+    if (snap.exists()) {
+      userProfile = snap.data();
+    } else {
+      userProfile = {
+        name: user.displayName || user.email.split('@')[0],
+        email: user.email,
+        role: 'user',
+        questionsCount: 0,
+        createdAt: serverTimestamp()
+      };
+      await setDoc(ref, userProfile);
+    }
+    isAdmin = userProfile.role === 'admin';
+    updateUIForLoggedIn();
+    loadBookmarks();
+    if (isAdmin) {
+      document.getElementById('admin-nav-item').style.display = 'flex';
+      loadAdminStats();
+    }
+    showToast('مرحباً ' + (userProfile.name || user.email) + ' 👋', 'success');
+  } else {
+    currentUser  = null;
+    userProfile  = null;
+    isAdmin      = false;
+    bookmarks    = [];
+    updateUIForLoggedOut();
+  }
+});
+
+function updateUIForLoggedIn() {
+  const name  = userProfile?.name || currentUser.email;
+  const email = currentUser.email;
+  const init  = name.charAt(0).toUpperCase();
+
+  document.getElementById('auth-buttons').style.display = 'none';
+  const tui = document.getElementById('topbar-user-info');
+  tui.style.display = 'flex';
+  document.getElementById('topbarGreeting').textContent = 'أهلاً، ' + name;
+
+  document.getElementById('sidebarFooter').style.display = 'block';
+  document.getElementById('sidebarAvatar').textContent = init;
+  document.getElementById('sidebarName').textContent = name;
+  document.getElementById('sidebarEmail').textContent = email;
+}
+
+function updateUIForLoggedOut() {
+  document.getElementById('auth-buttons').style.display = 'flex';
+  document.getElementById('topbar-user-info').style.display = 'none';
+  document.getElementById('sidebarFooter').style.display = 'none';
+  document.getElementById('admin-nav-item').style.display = 'none';
+}
+
+// ================================================================
+// AUTH FUNCTIONS (exposed to window)
+// ================================================================
+window.doLogin = async function() {
+  const email = document.getElementById('login-email').value.trim();
+  const pass  = document.getElementById('login-pass').value;
+  const err   = document.getElementById('auth-error');
+  const btn   = document.getElementById('auth-btn-login');
+
+  if (!email || !pass) { showAuthError('يرجى تعبئة جميع الحقول'); return; }
+
+  btn.disabled = true; btn.textContent = '⏳ جارٍ تسجيل الدخول...';
+  err.style.display = 'none';
+
+  try {
+    await signInWithEmailAndPassword(auth, email, pass);
+    closeModal();
+  } catch(e) {
+    const msgs = {
+      'auth/invalid-credential':   'البريد أو كلمة المرور غير صحيحة',
+      'auth/user-not-found':       'لا يوجد حساب بهذا البريد',
+      'auth/wrong-password':       'كلمة المرور غير صحيحة',
+      'auth/too-many-requests':    'محاولات كثيرة، الرجاء الانتظار',
+      'auth/network-request-failed':'خطأ في الاتصال بالإنترنت'
+    };
+    showAuthError(msgs[e.code] || 'حدث خطأ: ' + e.message);
+  }
+  btn.disabled = false; btn.textContent = 'تسجيل الدخول';
+};
+
+window.doRegister = async function() {
+  const name  = document.getElementById('reg-name').value.trim();
+  const email = document.getElementById('reg-email').value.trim();
+  const pass  = document.getElementById('reg-pass').value;
+  const err   = document.getElementById('auth-error');
+  const btn   = document.getElementById('auth-btn-register');
+
+  if (!name)         { showAuthError('يرجى إدخال الاسم'); return; }
+  if (!email)        { showAuthError('يرجى إدخال البريد الإلكتروني'); return; }
+  if (pass.length<6) { showAuthError('كلمة المرور يجب أن تكون 6 أحرف على الأقل'); return; }
+
+  btn.disabled = true; btn.textContent = '⏳ جارٍ إنشاء الحساب...';
+  err.style.display = 'none';
+
+  try {
+    const cred = await createUserWithEmailAndPassword(auth, email, pass);
+    await updateProfile(cred.user, { displayName: name });
+    closeModal();
+    showToast('تم إنشاء حسابك بنجاح 🎉', 'success');
+  } catch(e) {
+    const msgs = {
+      'auth/email-already-in-use': 'البريد الإلكتروني مستخدم بالفعل',
+      'auth/invalid-email':        'بريد إلكتروني غير صالح',
+      'auth/weak-password':        'كلمة المرور ضعيفة جداً',
+      'auth/network-request-failed':'خطأ في الاتصال بالإنترنت'
+    };
+    showAuthError(msgs[e.code] || 'حدث خطأ: ' + e.message);
+  }
+  btn.disabled = false; btn.textContent = 'إنشاء الحساب';
+};
+
+window.doLogout = async function() {
+  await signOut(auth);
+  chatHistory = [];
+  newChat();
+  showToast('تم تسجيل الخروج بنجاح', 'info');
+};
+
+function showAuthError(msg) {
+  const err = document.getElementById('auth-error');
+  err.textContent = msg; err.style.display = 'block';
+}
+
+// ================================================================
+// CHAT - ANTHROPIC API
+// ================================================================
+window.sendMessage = async function() {
+  const input = document.getElementById('chatInput');
+  const text  = input.value.trim();
+  if (!text || isSending) return;
+
+  // Content moderation
+  const contentFilter = ['جنسي', 'فاحش', 'بذيء'];
+  if (contentFilter.some(w => text.includes(w))) {
+    showToast('هذا السؤال لا يتوافق مع سياسة المنصة', 'error');
+    return;
+  }
+
+  isSending = true;
+  document.getElementById('sendBtn').disabled = true;
+  document.getElementById('welcomeScreen').style.display = 'none';
+  document.getElementById('messagesList').style.display = 'flex';
+
+  appendMessage('user', text);
+  input.value = '';
+  input.style.height = 'auto';
+  document.getElementById('charCounter').textContent = '0 / 1000';
+
+  chatHistory.push({ role: 'user', content: text });
+
+  const typingId = appendTyping();
+  showLoadingBar();
+
+  // Build system prompt based on mode
+  const systemPrompts = {
+    general: `أنت "نور العِلم"، مساعد إسلامي متخصص ومتعمق في العلوم الشرعية. تُجيب بدقة علمية وأمانة تامة مستنداً للقرآن الكريم والسنة النبوية الصحيحة وأقوال العلماء المعتمدين.
+
+التزم بهذا التنسيق الدقيق في كل إجابة:
+
+【الحكم】: [الحكم الشرعي المختصر في جملة واحدة]
+
+【الدليل من القرآن】: [الآية الكريمة بالرسم العثماني مع رقم السورة والآية. إن لم توجد آية مباشرة فاذكر آية ذات صلة]
+
+【الدليل من السنة】: [الحديث النبوي بنصه مع المصدر (البخاري/مسلم/...) ودرجته (صحيح/حسن). إن لم يوجد فاذكر قاعدة أصولية]
+
+【الشرح والتفصيل】: [شرح مفصل ومنظم للحكم مع ذكر الحكمة منه]
+
+【مذاهب العلماء】:
+• الحنفية: [القول]
+• المالكية: [القول]
+• الشافعية: [القول]
+• الحنابلة: [القول]
+• الراجح: [القول الأرجح بدليله]
+
+【للاستزادة】: islamqa.info أو dorar.net أو islamweb.net`,
+
+    quran: `أنت متخصص في علوم القرآن الكريم. عند الإجابة: اذكر الآيات ذات الصلة بالنص الكامل، ثم تفسيرها من ابن كثير والطبري، ثم أوجه الاستدلال منها.`,
+
+    hadith: `أنت متخصص في علوم الحديث النبوي. عند الإجابة: اذكر الأحاديث المتعلقة بالموضوع، ودرجتها، ورواتها، وشرحها العلمي.`,
+
+    fiqh: `أنت متخصص في الفقه الإسلامي المقارن. عند الإجابة: قارن بين المذاهب الأربعة بتفصيل، واذكر أدلة كل مذهب، ثم بيّن الراجح.`
+  };
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': ANTHROPIC_KEY,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-calls': 'true'
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 2000,
+        system: systemPrompts[currentMode] || systemPrompts.general,
+        messages: chatHistory
+      })
+    });
+
+    hideLoadingBar();
+    removeTyping(typingId);
+
+    if (!res.ok) {
+      const errData = await res.json().catch(()=>({}));
+      throw new Error(errData.error?.message || 'API Error ' + res.status);
+    }
+
+    const data = await res.json();
+    const aiText = data.content.map(c => c.text || '').join('');
+
+    chatHistory.push({ role: 'assistant', content: aiText });
+    appendMessage('ai', aiText);
+
+    // Save to Firestore
+    if (currentUser) {
+      await logQuestion(text, aiText);
+    }
+
+  } catch(err) {
+    hideLoadingBar();
+    removeTyping(typingId);
+    console.error('API Error:', err);
+
+    appendMessage('ai', '⚠️ حدث خطأ في الاتصال: ' + err.message + '\n\nالرجاء التحقق من الاتصال بالإنترنت والمحاولة مرة أخرى.');
+    showToast('خطأ في الاتصال بالذكاء الاصطناعي', 'error');
+  }
+
+  isSending = false;
+  document.getElementById('sendBtn').disabled = false;
+};
+
+// ================================================================
+// FIRESTORE LOGGING
+// ================================================================
+async function logQuestion(question, answer) {
+  try {
+    await addDoc(collection(db, 'questions'), {
+      uid: currentUser.uid,
+      question, answer,
+      mode: currentMode,
+      status: 'answered',
+      timestamp: serverTimestamp()
+    });
+    // Update user question count
+    const userRef = doc(db, 'users', currentUser.uid);
+    const snap = await getDoc(userRef);
+    if (snap.exists()) {
+      await updateDoc(userRef, { questionsCount: (snap.data().questionsCount||0) + 1 });
+    }
+  } catch(e) { console.error('Firestore log error:', e); }
+}
+
+// ================================================================
+// BOOKMARKS
+// ================================================================
+async function loadBookmarks() {
+  if (!currentUser) return;
+  try {
+    const q = query(collection(db, 'bookmarks'), where('uid','==',currentUser.uid), orderBy('timestamp','desc'), limit(50));
+    const snap = await getDocs(q);
+    bookmarks = snap.docs.map(d => ({id:d.id, ...d.data()}));
+    renderBookmarks();
+  } catch(e) { console.error('Load bookmarks error:', e); }
+}
+
+function renderBookmarks() {
+  const list = document.getElementById('bookmarksList');
+  if (bookmarks.length === 0) {
+    list.innerHTML = '<div class="empty-state"><div class="empty-icon">⭐</div><div class="empty-text">لا توجد محفوظات بعد.</div></div>';
+    return;
+  }
+  list.innerHTML = bookmarks.map(b => `
+    <div class="bookmark-card">
+      <span class="bk-icon">⭐</span>
+      <div class="bk-content">
+        <div class="bk-question">${escHtml(b.question)}</div>
+        <div class="bk-date">${b.timestamp?.toDate?.()?.toLocaleDateString('ar-SA') || ''}</div>
+      </div>
+      <button class="bk-del" onclick="deleteBookmark('${b.id}')" title="حذف">🗑️</button>
+    </div>
+  `).join('');
+}
+
+window.saveBookmark = async function(question, answer) {
+  if (!currentUser) { openModal('login'); showToast('سجّل دخولك لحفظ الإجابات', 'info'); return; }
+  try {
+    const ref = await addDoc(collection(db, 'bookmarks'), {
+      uid: currentUser.uid, question, answer,
+      timestamp: serverTimestamp()
+    });
+    bookmarks.unshift({ id: ref.id, question, answer });
+    renderBookmarks();
+    showToast('تم الحفظ في المفضلة ⭐', 'success');
+  } catch(e) { showToast('فشل الحفظ: ' + e.message, 'error'); }
+};
+
+window.deleteBookmark = async function(id) {
+  try {
+    const { deleteDoc } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js');
+    await deleteDoc(doc(db, 'bookmarks', id));
+    bookmarks = bookmarks.filter(b => b.id !== id);
+    renderBookmarks();
+    showToast('تم الحذف', 'info');
+  } catch(e) { showToast('فشل الحذف', 'error'); }
+};
+
+// ================================================================
+// ADMIN
+// ================================================================
+async function loadAdminStats() {
+  if (!isAdmin) return;
+  try {
+    const qSnap = await getDocs(collection(db, 'questions'));
+    const uSnap = await getDocs(collection(db, 'users'));
+    const pendingQ = query(collection(db, 'questions'), where('status','==','review'));
+    const pSnap = await getDocs(pendingQ);
+
+    document.getElementById('stat-questions').textContent = qSnap.size;
+    document.getElementById('stat-users').textContent = uSnap.size;
+    document.getElementById('stat-pending').textContent = pSnap.size;
+    document.getElementById('adminBadge').textContent = pSnap.size;
+
+    // Load logs
+    await loadAdminLogs();
+  } catch(e) { console.error('Admin stats error:', e); }
+}
+
+window.loadAdminLogs = async function() {
+  if (!isAdmin) return;
+  try {
+    const q = query(collection(db,'questions'), orderBy('timestamp','desc'), limit(20));
+    const snap = await getDocs(q);
+    const tbody = document.getElementById('adminLogsBody');
+
+    if (snap.empty) {
+      tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;padding:30px;color:var(--text-3);">لا توجد أسئلة بعد</td></tr>';
+      return;
+    }
+
+    tbody.innerHTML = snap.docs.map(d => {
+      const data = d.data();
+      const time = data.timestamp?.toDate?.()?.toLocaleTimeString('ar-SA',{hour:'2-digit',minute:'2-digit'}) || '-';
+      const q = data.question?.substring(0,50) + (data.question?.length>50?'...':'');
+      const stClass = data.status==='review' ? 'st-rev' : data.status==='blocked' ? 'st-blk' : 'st-ok';
+      const stLabel = data.status==='review' ? 'مراجعة' : data.status==='blocked' ? 'محظور' : 'مُجاب';
+      return `<tr>
+        <td>${escHtml(q)}</td>
+        <td style="direction:ltr;font-size:0.75rem;color:var(--text-3)">${data.uid?.substring(0,12)}...</td>
+        <td>${time}</td>
+        <td><span class="st-badge ${stClass}">${stLabel}</span></td>
+      </tr>`;
+    }).join('');
+  } catch(e) { console.error('Admin logs error:', e); }
+};
+
+// ================================================================
+// MESSAGE RENDERING
+// ================================================================
+function appendMessage(role, text) {
+  const list = document.getElementById('messagesList');
+  const div  = document.createElement('div');
+  div.className = `msg-row ${role}`;
+
+  const avatarInner = role === 'ai'
+    ? `<div class="msg-avatar-ai">☪</div>`
+    : `<div class="msg-avatar-user">${currentUser ? (userProfile?.name||'أ').charAt(0).toUpperCase() : 'أ'}</div>`;
+
+  const content = role === 'ai' ? renderAIContent(text) : `<div class="msg-bubble">${escHtml(text).replace(/\n/g,'<br>')}</div>`;
+
+  div.innerHTML = `
+    <div class="msg-inner">
+      <div class="msg-avatar-wrap">${avatarInner}</div>
+      <div class="msg-content-wrap">
+        <div class="msg-sender-name">${role==='ai'?'نور العلم':'أنت'}</div>
+        ${content}
+      </div>
+    </div>`;
+
+  list.appendChild(div);
+  scrollToBottom();
+}
+
+function renderAIContent(text) {
+  // Parse sections
+  const s = {};
+  const rx = {
+    verdict:     /【الحكم】:\s*(.+?)(?=【|$)/s,
+    quranDaleel: /【الدليل من القرآن】:\s*(.+?)(?=【|$)/s,
+    hadithDaleel:/【الدليل من السنة】:\s*(.+?)(?=【|$)/s,
+    explain:     /【الشرح والتفصيل】:\s*(.+?)(?=【|$)/s,
+    scholars:    /【مذاهب العلماء】:\s*(.+?)(?=【|$)/s,
+    more:        /【للاستزادة】:\s*(.+?)(?=【|$)/s
+  };
+
+  let hasFormat = false;
+  for (const [k, r] of Object.entries(rx)) {
+    const m = text.match(r);
+    if (m) { s[k] = m[1].trim(); hasFormat = true; }
+  }
+
+  if (!hasFormat) {
+    // Fallback: just render text nicely
+    return `<div class="msg-bubble">
+      <div style="white-space:pre-wrap; line-height:1.8; font-size:0.92rem;">${escHtml(text)}</div>
+      ${msgActionsHtml(text, text)}
+    </div>`;
+  }
+
+  let html = '<div class="msg-bubble">';
+
+  if (s.verdict) {
+    html += `<div class="ans-verdict-pill">⚖️ الحكم الشرعي</div>
+    <div class="ans-verdict-text">${escHtml(s.verdict)}</div>`;
+  }
+
+  if (s.quranDaleel) {
+    html += `<div class="ans-block quran">
+      <div class="ans-block-header">📖 الدليل من القرآن الكريم</div>
+      <div class="ans-block-body">
+        <div class="quran-text">${escHtml(s.quranDaleel).replace(/\[(.+?)\]/g,'<span class="quran-ref">[$1]</span>')}</div>
+      </div>
+    </div>`;
+  }
+
+  if (s.hadithDaleel) {
+    html += `<div class="ans-block hadith">
+      <div class="ans-block-header">📜 الدليل من السنة النبوية</div>
+      <div class="ans-block-body">
+        <div class="hadith-text">${escHtml(s.hadithDaleel)}</div>
+      </div>
+    </div>`;
+  }
+
+  if (s.explain) {
+    html += `<div class="ans-block explain">
+      <div class="ans-block-header">💡 الشرح والتفصيل</div>
+      <div class="ans-block-body">
+        <div class="explain-text">${escHtml(s.explain)}</div>
+      </div>
+    </div>`;
+  }
+
+  if (s.scholars) {
+    const lines = s.scholars.split('\n').filter(l=>l.trim());
+    let schoolsHtml = '<div class="scholars-list">';
+    lines.forEach(line => {
+      const m = line.match(/^[•·-]?\s*(الحنفية|المالكية|الشافعية|الحنابلة|الراجح):\s*(.+)/);
+      if (m) {
+        schoolsHtml += `<div class="scholar-row"><div class="school-name">${m[1]}</div><div class="school-opinion">${escHtml(m[2])}</div></div>`;
+      } else if (line.trim()) {
+        schoolsHtml += `<div class="scholar-row"><div class="school-opinion" style="min-width:0">${escHtml(line.replace(/^[•·-]\s*/,''))}</div></div>`;
+      }
+    });
+    schoolsHtml += '</div>';
+    html += `<div class="ans-block scholars">
+      <div class="ans-block-header">🧑‍🏫 مذاهب العلماء</div>
+      <div class="ans-block-body">${schoolsHtml}</div>
+    </div>`;
+  }
+
+  if (s.more) {
+    const links = s.more.match(/[\w-]+\.\w{2,}/g) || [];
+    if (links.length) {
+      html += `<div class="ans-sources">
+        <div class="ans-sources-title">للاستزادة والمراجع</div>
+        <div class="ans-links">
+          ${links.map(l=>`<a href="https://${l}" target="_blank" rel="noopener" class="ans-link">🔗 ${l}</a>`).join('')}
+        </div>
+      </div>`;
+    }
+  }
+
+  const fullQ = chatHistory.find((m,i) => m.role==='user' && chatHistory[i+1]?.content===text)?.content || '';
+  html += msgActionsHtml(fullQ, text);
+  html += '</div>';
+  return html;
+}
+
+function msgActionsHtml(question, answer) {
+  return `<div class="msg-actions">
+    <button class="msg-act-btn" onclick="copyToClipboard(this, \`${answer.replace(/`/g,"'").replace(/\n/g,'\\n').substring(0,500)}\`)">📋 نسخ</button>
+    <button class="msg-act-btn" onclick="saveBk(this, \`${question.replace(/`/g,"'")}\`, \`${answer.replace(/`/g,"'").replace(/\n/g,'\\n').substring(0,500)}\`)">⭐ حفظ</button>
+    <button class="msg-act-btn" onclick="shareAnswer(\`${answer.replace(/`/g,"'").replace(/\n/g,'\\n').substring(0,200)}\`)">🔗 مشاركة</button>
+  </div>`;
+}
+
+window.copyToClipboard = function(btn, text) {
+  navigator.clipboard.writeText(text.replace(/\\n/g,'\n')).then(()=>{
+    btn.classList.add('copied'); btn.textContent = '✓ تم النسخ';
+    setTimeout(()=>{ btn.classList.remove('copied'); btn.innerHTML = '📋 نسخ'; }, 2000);
+  });
+};
+
+window.saveBk = function(btn, q, a) {
+  window.saveBookmark(q.replace(/\\n/g,'\n'), a.replace(/\\n/g,'\n'));
+};
+
+window.shareAnswer = function(text) {
+  const share = text.replace(/\\n/g,'\n').substring(0,300) + '\n\n— نور العلم | منصة العلوم الإسلامية';
+  navigator.clipboard.writeText(share).then(()=> showToast('تم نسخ الإجابة للمشاركة 🔗', 'info'));
+};
+
+function appendTyping() {
+  const list = document.getElementById('messagesList');
+  const id   = 'typing-' + Date.now();
+  const div  = document.createElement('div');
+  div.id = id; div.className = 'msg-row ai';
+  div.innerHTML = `<div class="msg-inner">
+    <div class="msg-avatar-wrap"><div class="msg-avatar-ai">☪</div></div>
+    <div class="msg-content-wrap">
+      <div class="msg-sender-name">نور العلم</div>
+      <div class="typing-dots">
+        <div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>
+        <span class="typing-label">يبحث في المصادر الشرعية...</span>
+      </div>
+    </div>
+  </div>`;
+  list.appendChild(div);
+  scrollToBottom();
+  return id;
+}
+
+function removeTyping(id) {
+  document.getElementById(id)?.remove();
+}
+
+// ================================================================
+// QURAN SEARCH
+// ================================================================
+const QURAN_DB = [
+  { surah:'الفاتحة', num:1, ayah:6, text:'اهْدِنَا الصِّرَاطَ الْمُسْتَقِيمَ', tafsir:'سؤال العبد ربه الهداية إلى الطريق المستقيم، وهو الإسلام الحق الذي يوصل إلى رضا الله وجنته.' },
+  { surah:'البقرة', num:2, ayah:2, text:'ذَٰلِكَ الْكِتَابُ لَا رَيْبَ ۛ فِيهِ ۛ هُدًى لِّلْمُتَّقِينَ', tafsir:'هذا القرآن الكريم لا شك فيه، وهو هداية للمتقين الذين يخشون الله ويتبعون أوامره.' },
+  { surah:'البقرة', num:2, ayah:255, text:'اللَّهُ لَا إِلَٰهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ ۚ لَا تَأْخُذُهُ سِنَةٌ وَلَا نَوْمٌ', tafsir:'آية الكرسي، وهي أعظم آية في القرآن. تصف الله بصفات الكمال: الحياة الأبدية، والقيومية، وعدم الغفلة.' },
+  { surah:'البقرة', num:2, ayah:286, text:'لَا يُكَلِّفُ اللَّهُ نَفْسًا إِلَّا وُسْعَهَا', tafsir:'دليل على رحمة الله بعباده، إذ لا يكلفهم إلا بما يطيقون، فلا تشقى النفس بما لا تقدر عليه.' },
+  { surah:'آل عمران', num:3, ayah:185, text:'كُلُّ نَفْسٍ ذَائِقَةُ الْمَوْتِ', tafsir:'حقيقة كونية ثابتة: كل نفس ستموت، وهذا يحث على الاستعداد للآخرة.' },
+  { surah:'النساء', num:4, ayah:101, text:'وَإِذَا ضَرَبْتُمْ فِي الْأَرْضِ فَلَيْسَ عَلَيْكُمْ جُنَاحٌ أَن تَقْصُرُوا مِنَ الصَّلَاةِ', tafsir:'مشروعية قصر الصلاة في السفر رحمةً من الله بعباده المسافرين.' },
+  { surah:'يوسف', num:12, ayah:87, text:'وَلَا تَيْأَسُوا مِن رَّوْحِ اللَّهِ ۖ إِنَّهُ لَا يَيْأَسُ مِن رَّوْحِ اللَّهِ إِلَّا الْقَوْمُ الْكَافِرُونَ', tafsir:'نهي الله عن اليأس من رحمته، فالمؤمن يحسن الظن بربه دائماً مهما اشتدت الأحوال.' },
+  { surah:'الرعد', num:13, ayah:28, text:'أَلَا بِذِكْرِ اللَّهِ تَطْمَئِنُّ الْقُلُوبُ', tafsir:'الطمأنينة الحقيقية لا تُنال إلا بذكر الله، فهو دواء القلوب وراحة الأرواح.' },
+  { surah:'الحجرات', num:49, ayah:13, text:'يَا أَيُّهَا النَّاسُ إِنَّا خَلَقْنَاكُم مِّن ذَكَرٍ وَأُنثَىٰ وَجَعَلْنَاكُمْ شُعُوبًا وَقَبَائِلَ لِتَعَارَفُوا ۚ إِنَّ أَكْرَمَكُمْ عِندَ اللَّهِ أَتْقَاكُمْ', tafsir:'مبدأ المساواة في الإسلام: البشر متساوون في الأصل، والتفاضل بالتقوى والعمل الصالح لا بالجنس أو اللون.' },
+  { surah:'الشرح', num:94, ayah:6, text:'إِنَّ مَعَ الْعُسْرِ يُسْرًا', tafsir:'بشارة ربانية: أن الفرج آتٍ لا محالة مع الصبر، فكل ضيق يعقبه سعة وكل شدة يأتي بعدها فرج.' },
+  { surah:'الزمر', num:39, ayah:53, text:'قُلْ يَا عِبَادِيَ الَّذِينَ أَسْرَفُوا عَلَىٰ أَنفُسِهِمْ لَا تَقْنَطُوا مِن رَّحْمَةِ اللَّهِ ۚ إِنَّ اللَّهَ يَغْفِرُ الذُّنُوبَ جَمِيعًا', tafsir:'باب التوبة مفتوح لجميع العباد مهما أسرفوا في المعاصي، فرحمة الله أوسع من كل ذنب.' },
+  { surah:'النحل', num:16, ayah:97, text:'مَنْ عَمِلَ صَالِحًا مِّن ذَكَرٍ أَوْ أُنثَىٰ وَهُوَ مُؤْمِنٌ فَلَنُحْيِيَنَّهُ حَيَاةً طَيِّبَةً', tafsir:'ثمرة الإيمان والعمل الصالح: الحياة الطيبة في الدنيا والآخرة بغض النظر عن الجنس.' },
+  { surah:'الإسراء', num:17, ayah:23, text:'وَقَضَىٰ رَبُّكَ أَلَّا تَعْبُدُوا إِلَّا إِيَّاهُ وَبِالْوَالِدَيْنِ إِحْسَانًا', tafsir:'توحيد الله وبر الوالدين مقرونان، وهذا يدل على عظم حق الوالدين في الإسلام.' },
+  { surah:'الملك', num:67, ayah:2, text:'الَّذِي خَلَقَ الْمَوْتَ وَالْحَيَاةَ لِيَبْلُوَكُمْ أَيُّكُمْ أَحْسَنُ عَمَلًا', tafsir:'الدنيا دار ابتلاء واختبار، والله يراقب أعمال العباد ليجزيهم بأحسن أعمالهم.' }
+];
+
+window.searchQuran = function() {
+  const q = document.getElementById('quranInput').value.trim();
+  const res = document.getElementById('quranResults');
+  if (!q) { res.innerHTML = '<div style="text-align:center;padding:60px;color:var(--text-3)"><div style="font-size:3rem;margin-bottom:12px;opacity:0.4">📖</div><div>اكتب كلمة للبحث</div></div>'; return; }
+
+  const found = QURAN_DB.filter(v => v.text.includes(q) || v.surah.includes(q) || v.tafsir.includes(q));
+
+  if (!found.length) {
+    res.innerHTML = `<div style="text-align:center;padding:60px;color:var(--text-3)"><div style="font-size:3rem;margin-bottom:12px;opacity:0.4">🔍</div><div>لم يتم العثور على نتائج لـ "<b style="color:var(--gold-soft)">${escHtml(q)}</b>"<br><small>جرب كلمة أخرى</small></div></div>`;
+    return;
+  }
+
+  res.innerHTML = found.map((v,i) => `
+    <div class="quran-verse-card">
+      <div class="qvc-meta">
+        <div class="qvc-num">${i+1}</div>
+        <div><div class="qvc-surah">سورة ${v.surah}</div><div class="qvc-ref">الآية ${v.ayah}</div></div>
+      </div>
+      <div class="qvc-arabic">${v.text}</div>
+      <div class="qvc-tafsir">
+        <div class="qvc-tafsir-label">📚 تفسير ابن كثير</div>
+        ${escHtml(v.tafsir)}
+      </div>
+      <div class="qvc-actions">
+        <button class="msg-act-btn" onclick="copyToClipboard(this, '${v.text.replace(/'/g,"\\'")}')">📋 نسخ الآية</button>
+        <button class="msg-act-btn" onclick="window.saveBookmark('${escHtml(v.surah)} ${v.ayah}', '${v.text.replace(/'/g,"\\'")}')">⭐ حفظ</button>
+        <a href="https://quran.com/${v.num}/${v.ayah}" target="_blank" rel="noopener" class="msg-act-btn" style="text-decoration:none">🌐 quran.com</a>
+      </div>
+    </div>
+  `).join('');
+};
+
+// ================================================================
+// HADITH SEARCH
+// ================================================================
+const HADITH_DB = {
+  bukhari: [
+    { num:1, text:'إِنَّمَا الأَعْمَالُ بِالنِّيَّاتِ، وَإِنَّمَا لِكُلِّ امْرِئٍ مَا نَوَى', degree:'صحيح', narrator:'عمر بن الخطاب رضي الله عنه', explain:'أصل في الفقه الإسلامي: أن الأعمال تُقبل أو ترد بحسب النية الكامنة في القلب.' },
+    { num:2, text:'بُنِيَ الإِسْلاَمُ عَلَى خَمْسٍ: شَهَادَةِ أَنْ لاَ إِلَهَ إِلاَّ اللَّهُ وَأَنَّ مُحَمَّدًا رَسُولُ اللَّهِ، وَإِقَامِ الصَّلاَةِ، وَإِيتَاءِ الزَّكَاةِ، وَصَوْمِ رَمَضَانَ، وَحَجِّ الْبَيْتِ', degree:'صحيح', narrator:'ابن عمر رضي الله عنهما', explain:'أركان الإسلام الخمسة التي يقوم عليها الدين.' },
+    { num:52, text:'الْحَلالُ بَيِّنٌ، وَالْحَرَامُ بَيِّنٌ، وَبَيْنَهُمَا مُشَبَّهَاتٌ لاَ يَعْلَمُهَا كَثِيرٌ مِنَ النَّاسِ', degree:'صحيح', narrator:'النعمان بن بشير رضي الله عنه', explain:'قاعدة فقهية عظيمة في تمييز الحلال من الحرام والشبهات.' },
+  ],
+  muslim: [
+    { num:223, text:'طَهُورُ إِنَاءِ أَحَدِكُمْ إِذَا وَلَغَ فِيهِ الْكَلْبُ أَنْ يَغْسِلَهُ سَبْعَ مَرَّاتٍ أُولاَهُنَّ بِالتُّرَابِ', degree:'صحيح', narrator:'أبو هريرة رضي الله عنه', explain:'حكم تطهير الإناء من نجاسة الكلب بالغسل سبعاً إحداها بالتراب.' },
+    { num:2564, text:'الْمُسْلِمُ أَخُو الْمُسْلِمِ لاَ يَظْلِمُهُ وَلاَ يَخْذُلُهُ وَلاَ يَحْقِرُهُ', degree:'صحيح', narrator:'أبو هريرة رضي الله عنه', explain:'حقوق المسلم على أخيه المسلم: عدم الظلم والخذلان والاحتقار.' },
+  ],
+  abudawud: [
+    { num:4604, text:'عَلَيْكُمْ بِسُنَّتِي وَسُنَّةِ الْخُلَفَاءِ الرَّاشِدِينَ الْمَهْدِيِّينَ، عَضُّوا عَلَيْهَا بِالنَّوَاجِذِ', degree:'صحيح', narrator:'العرباض بن سارية رضي الله عنه', explain:'وجوب التمسك بسنة النبي ﷺ وسنة الخلفاء الراشدين.' },
+  ],
+  tirmidhi: [
+    { num:2518, text:'اتَّقِ اللهَ حَيْثُمَا كُنْتَ، وَأَتْبِعِ السَّيِّئَةَ الْحَسَنَةَ تَمْحُهَا، وَخَالِقِ النَّاسَ بِخُلُقٍ حَسَنٍ', degree:'حسن', narrator:'أبو ذر وشداد بن أوس رضي الله عنهما', explain:'ثلاث وصايا جامعة: تقوى الله، وتعقيب السيئة بالحسنة، وحسن المعاملة.' },
+  ],
+  nasai: [
+    { num:3939, text:'كُلُّ مُسْكِرٍ خَمْرٌ، وَكُلُّ خَمْرٍ حَرَامٌ', degree:'صحيح', narrator:'عبد الله بن عمر رضي الله عنهما', explain:'تحريم كل مسكر قليلاً كان أم كثيراً.' },
+  ],
+  ibnmajah: [
+    { num:2340, text:'لاَ ضَرَرَ وَلاَ ضِرَارَ', degree:'صحيح', narrator:'ابن عباس رضي الله عنهما', explain:'قاعدة فقهية كبرى: لا يجوز إلحاق الضرر بالنفس أو الغير في الإسلام.' },
+  ]
+};
+
+let selectedBook = 'bukhari';
+
+window.selectBook = function(book) {
+  selectedBook = book;
+  document.querySelectorAll('.hadith-book-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('book-' + book).classList.add('active');
+  document.getElementById('hadithResults').innerHTML = '<div style="text-align:center;padding:40px;color:var(--text-3)">اكتب كلمة للبحث في ' + ({bukhari:'صحيح البخاري',muslim:'صحيح مسلم',abudawud:'سنن أبي داود',tirmidhi:'سنن الترمذي',nasai:'سنن النسائي',ibnmajah:'سنن ابن ماجة'}[book]) + '</div>';
+};
+
+window.searchHadith = function() {
+  const q   = document.getElementById('hadithInput').value.trim();
+  const res = document.getElementById('hadithResults');
+  const db  = HADITH_DB[selectedBook] || [];
+
+  if (!q) {
+    res.innerHTML = '<div style="text-align:center;padding:40px;color:var(--text-3)">اكتب كلمة للبحث</div>';
+    return;
+  }
+
+  const found = db.filter(h => h.text.includes(q) || h.narrator.includes(q) || h.explain.includes(q));
+
+  if (!found.length) {
+    res.innerHTML = `<div style="text-align:center;padding:60px;color:var(--text-3)">لم يتم العثور على نتائج لـ "<b style="color:var(--gold-soft)">${escHtml(q)}</b>"</div>`;
+    return;
+  }
+
+  const bookName = {bukhari:'صحيح البخاري',muslim:'صحيح مسلم',abudawud:'سنن أبي داود',tirmidhi:'سنن الترمذي',nasai:'سنن النسائي',ibnmajah:'سنن ابن ماجة'}[selectedBook];
+
+  res.innerHTML = found.map(h => `
+    <div class="quran-verse-card">
+      <div class="qvc-meta">
+        <div class="qvc-num" style="font-size:0.7rem">ح${h.num}</div>
+        <div>
+          <div class="qvc-surah">${bookName}</div>
+          <div class="qvc-ref">${h.narrator}</div>
+        </div>
+        <div style="margin-right:auto;display:flex;gap:6px">
+          <span class="hbadge sahih">${h.degree}</span>
+        </div>
+      </div>
+      <div class="qvc-arabic" style="font-size:1.15rem;">${h.text}</div>
+      <div class="qvc-tafsir">
+        <div class="qvc-tafsir-label">💡 الشرح</div>
+        ${escHtml(h.explain)}
+      </div>
+      <div class="qvc-actions">
+        <button class="msg-act-btn" onclick="copyToClipboard(this,'${h.text.replace(/'/g,"\\'")}')">📋 نسخ</button>
+        <button class="msg-act-btn" onclick="window.saveBookmark('حديث رقم ${h.num}','${h.text.replace(/'/g,"\\'")}')">⭐ حفظ</button>
+        <a href="https://sunnah.com/${selectedBook}:${h.num}" target="_blank" rel="noopener" class="msg-act-btn" style="text-decoration:none">🌐 sunnah.com</a>
+      </div>
+    </div>
+  `).join('');
+};
+
+// ================================================================
+// UI HELPERS (global)
+// ================================================================
+window.showSection = function(name) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('sec-' + name).classList.add('active');
+  const titles = { chat:'الدردشة الفقهية', quran:'البحث القرآني', hadith:'كتب الحديث', bookmarks:'المحفوظات', admin:'لوحة الإدارة' };
+  document.getElementById('topbarTitle').textContent = titles[name] || name;
+  const navMap = { chat:0, quran:1, hadith:2, bookmarks:3 };
+  const navItems = document.querySelectorAll('.nav-item');
+  if (navMap[name] !== undefined) navItems[navMap[name]]?.classList.add('active');
+  // Mobile: close sidebar
+  if (window.innerWidth < 900) document.getElementById('sidebar').classList.remove('open');
+};
+
+window.newChat = function() {
+  chatHistory = [];
+  document.getElementById('messagesList').innerHTML = '';
+  document.getElementById('messagesList').style.display = 'none';
+  document.getElementById('welcomeScreen').style.display = 'flex';
+  showSection('chat');
+};
+
+window.clearChat = function() {
+  chatHistory = [];
+  document.getElementById('messagesList').innerHTML = '';
+  document.getElementById('messagesList').style.display = 'none';
+  document.getElementById('welcomeScreen').style.display = 'flex';
+  showToast('تم مسح المحادثة', 'info');
+};
+
+window.fillQuestion = function(q) {
+  document.getElementById('chatInput').value = q;
+  document.getElementById('chatInput').focus();
+  autoResize(document.getElementById('chatInput'));
+};
+
+window.setMode = function(mode) {
+  currentMode = mode;
+  document.querySelectorAll('.it-btn').forEach(b => b.classList.remove('active-mode'));
+  document.getElementById('mode-' + mode).classList.add('active-mode');
+  const placeholders = {
+    general: 'اسأل سؤالك الشرعي هنا...',
+    quran:   'ابحث عن آية قرآنية أو موضوع...',
+    hadith:  'ابحث عن حديث نبوي...',
+    fiqh:    'اسأل عن مسألة فقهية مقارنة...'
+  };
+  document.getElementById('chatInput').placeholder = placeholders[mode];
+};
+
+window.handleKeydown = function(e) {
+  if (e.key==='Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+};
+
+window.autoResize = function(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 200) + 'px';
+  document.getElementById('charCounter').textContent = el.value.length + ' / 1000';
+  if (el.value.length > 1000) el.value = el.value.substring(0,1000);
+};
+
+window.openModal = function(tab='login') {
+  document.getElementById('authOverlay').classList.add('open');
+  switchTab(tab);
+  document.getElementById('auth-error').style.display = 'none';
+};
+
+window.closeModal = function() {
+  document.getElementById('authOverlay').classList.remove('open');
+};
+
+window.switchTab = function(tab) {
+  document.getElementById('tab-login').classList.toggle('active', tab==='login');
+  document.getElementById('tab-register').classList.toggle('active', tab==='register');
+  document.getElementById('form-login').style.display    = tab==='login' ? 'block' : 'none';
+  document.getElementById('form-register').style.display = tab==='register' ? 'block' : 'none';
+  document.getElementById('auth-error').style.display    = 'none';
+};
+
+window.toggleSidebar = function() {
+  const sb = document.getElementById('sidebar');
+  if (window.innerWidth < 900) { sb.classList.toggle('open'); }
+  else { sb.classList.toggle('collapsed'); }
+};
+
+window.toggleDropdown = function(e) {
+  e.stopPropagation();
+  const dd = document.getElementById('userDropdown');
+  const rect = e.currentTarget.getBoundingClientRect();
+  dd.style.bottom = (window.innerHeight - rect.top + 8) + 'px';
+  dd.style.right  = (window.innerWidth - rect.right) + 'px';
+  dd.classList.toggle('open');
+};
+
+window.closeDropdown = function() {
+  document.getElementById('userDropdown').classList.remove('open');
+};
+
+document.addEventListener('click', closeDropdown);
+
+window.checkPwStrength = function(pw) {
+  const fill  = document.getElementById('pw-fill');
+  const label = document.getElementById('pw-label');
+  let strength = 0;
+  if (pw.length >= 6) strength++;
+  if (pw.length >= 10) strength++;
+  if (/[A-Z]/.test(pw)) strength++;
+  if (/[0-9]/.test(pw)) strength++;
+  if (/[^A-Za-z0-9]/.test(pw)) strength++;
+  const configs = [
+    {w:'0%', c:'#f87171', t:''},
+    {w:'25%', c:'#f87171', t:'ضعيفة جداً'},
+    {w:'50%', c:'#fb923c', t:'ضعيفة'},
+    {w:'70%', c:'#facc15', t:'متوسطة'},
+    {w:'90%', c:'#86efac', t:'جيدة'},
+    {w:'100%', c:'#6dd897', t:'قوية جداً ✓'}
+  ];
+  const cfg = configs[Math.min(strength, 5)];
+  fill.style.width = cfg.w; fill.style.background = cfg.c;
+  label.textContent = cfg.t; label.style.color = cfg.c;
+};
+
+// Toast system
+window.showToast = function(msg, type='info') {
+  const container = document.getElementById('toastContainer');
+  const toast = document.createElement('div');
+  const icons = { success:'✓', error:'✕', info:'ℹ' };
+  toast.className = `toast ${type}`;
+  toast.innerHTML = `<span class="toast-icon">${icons[type]||'ℹ'}</span>${msg}`;
+  container.appendChild(toast);
+  setTimeout(()=>{ toast.style.opacity='0'; toast.style.transform='translateY(10px)'; setTimeout(()=>toast.remove(), 300); }, 3000);
+};
+
+// Loading bar
+function showLoadingBar() {
+  document.getElementById('loadingBar').classList.add('active');
+}
+function hideLoadingBar() {
+  document.getElementById('loadingBar').classList.remove('active');
+}
+
+function scrollToBottom() {
+  const vp = document.getElementById('chatViewport');
+  vp.scrollTop = vp.scrollHeight;
+}
+
+function escHtml(t='') {
+  return String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// Init mode
+setMode('general');
+</script>
+
+
+
+</body>
+</html>
