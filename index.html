@@ -256,8 +256,8 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--txt);dire
         <h3>🤖 نموذج الذكاء الاصطناعي</h3>
         <select class="ssel" id="mdl" onchange="saveCfg()">
           <option value="gemini-2.0-flash">Gemini 2.0 Flash ⚡ الأسرع</option>
-          <option value="gemini-2.0-flash">Gemini 1.5 Pro 🧠 الأقوى</option>
-          <option value="gemini-2.0-flash">Gemini 1.5 Flash ⚖️ متوازن</option>
+          <option value="gemini-1.5-pro">Gemini 1.5 Pro 🧠 الأقوى</option>
+          <option value="gemini-1.5-flash">Gemini 1.5 Flash ⚖️ متوازن</option>
         </select>
       </div>
       <div class="ssec">
@@ -301,7 +301,7 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--txt);dire
 <div id="toast"></div>
 
 <script>
-var API_KEY = 'AIzaSyB6C1OOUTif06_NRMg_9ceyqKsBE5rcGFk';
+// ══ لا يوجد API_KEY هنا — المفتاح محفوظ في Vercel Environment Variables ══
 
 var S = {
   mode: 'islamic',
@@ -389,89 +389,26 @@ var SUGS = {
 
 var AZKAR = {
   sabah: [
-    {
-      a: 'آية الكرسي - البقرة 255',
-      a2: 'اللَّهُ لَا إِلَٰهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ لَا تَأْخُذُهُ سِنَةٌ وَلَا نَوْمٌ',
-      c: 'مرة واحدة',
-      f: 'من قالها حين يصبح أُجير من الجن حتى يمسي'
-    },
-    {
-      a: 'سور الإخلاص والمعوذتين',
-      a2: 'قل هو الله أحد — قل أعوذ برب الفلق — قل أعوذ برب الناس',
-      c: '3 مرات',
-      f: 'تكفيك من كل شيء — رواه أبو داود'
-    },
-    {
-      a: 'أَصْبَحْنَا وَأَصْبَحَ الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ، لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ',
-      a2: '',
-      c: 'مرة واحدة',
-      f: 'رواه مسلم'
-    },
-    {
-      a: 'اللَّهُمَّ بِكَ أَصْبَحْنَا، وَبِكَ أَمْسَيْنَا، وَبِكَ نَحْيَا، وَبِكَ نَمُوتُ، وَإِلَيْكَ النُّشُورُ',
-      a2: '',
-      c: 'مرة واحدة',
-      f: 'رواه الترمذي'
-    },
-    {
-      a: 'اللَّهُمَّ أَنْتَ رَبِّي لَا إِلَهَ إِلَّا أَنْتَ، خَلَقْتَنِي وَأَنَا عَبْدُكَ، وَأَنَا عَلَى عَهْدِكَ وَوَعْدِكَ مَا اسْتَطَعْتُ، أَعُوذُ بِكَ مِنْ شَرِّ مَا صَنَعْتُ، أَبُوءُ لَكَ بِنِعْمَتِكَ عَلَيَّ، وَأَبُوءُ بِذَنْبِي فَاغْفِرْ لِي فَإِنَّهُ لَا يَغْفِرُ الذُّنُوبَ إِلَّا أَنْتَ',
-      a2: '',
-      c: 'مرة واحدة',
-      f: 'سيد الاستغفار — من قاله موقناً فمات من يومه دخل الجنة'
-    },
-    {
-      a: 'سُبْحَانَ اللهِ وَبِحَمْدِهِ',
-      a2: '',
-      c: '100 مرة',
-      f: 'حُطَّت خطاياه وإن كانت مثل زبد البحر — رواه مسلم'
-    }
+    {a:'آية الكرسي - البقرة 255',a2:'اللَّهُ لَا إِلَٰهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ لَا تَأْخُذُهُ سِنَةٌ وَلَا نَوْمٌ',c:'مرة واحدة',f:'من قالها حين يصبح أُجير من الجن حتى يمسي'},
+    {a:'سور الإخلاص والمعوذتين',a2:'قل هو الله أحد — قل أعوذ برب الفلق — قل أعوذ برب الناس',c:'3 مرات',f:'تكفيك من كل شيء — رواه أبو داود'},
+    {a:'أَصْبَحْنَا وَأَصْبَحَ الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ، لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ',a2:'',c:'مرة واحدة',f:'رواه مسلم'},
+    {a:'اللَّهُمَّ بِكَ أَصْبَحْنَا، وَبِكَ أَمْسَيْنَا، وَبِكَ نَحْيَا، وَبِكَ نَمُوتُ، وَإِلَيْكَ النُّشُورُ',a2:'',c:'مرة واحدة',f:'رواه الترمذي'},
+    {a:'اللَّهُمَّ أَنْتَ رَبِّي لَا إِلَهَ إِلَّا أَنْتَ، خَلَقْتَنِي وَأَنَا عَبْدُكَ، وَأَنَا عَلَى عَهْدِكَ وَوَعْدِكَ مَا اسْتَطَعْتُ، أَعُوذُ بِكَ مِنْ شَرِّ مَا صَنَعْتُ، أَبُوءُ لَكَ بِنِعْمَتِكَ عَلَيَّ، وَأَبُوءُ بِذَنْبِي فَاغْفِرْ لِي فَإِنَّهُ لَا يَغْفِرُ الذُّنُوبَ إِلَّا أَنْتَ',a2:'',c:'مرة واحدة',f:'سيد الاستغفار — من قاله موقناً فمات من يومه دخل الجنة'},
+    {a:'سُبْحَانَ اللهِ وَبِحَمْدِهِ',a2:'',c:'100 مرة',f:'حُطَّت خطاياه وإن كانت مثل زبد البحر — رواه مسلم'}
   ],
   masa: [
-    {
-      a: 'آية الكرسي - البقرة 255',
-      a2: 'اللَّهُ لَا إِلَٰهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ لَا تَأْخُذُهُ سِنَةٌ وَلَا نَوْمٌ',
-      c: 'مرة واحدة',
-      f: 'من قالها حين يمسي أُجير من الجن حتى يصبح'
-    },
-    {
-      a: 'أَمْسَيْنَا وَأَمْسَى الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ، لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ',
-      a2: '',
-      c: 'مرة واحدة',
-      f: 'رواه مسلم'
-    },
-    {
-      a: 'اللَّهُمَّ بِكَ أَمْسَيْنَا، وَبِكَ أَصْبَحْنَا، وَبِكَ نَحْيَا، وَبِكَ نَمُوتُ، وَإِلَيْكَ الْمَصِيرُ',
-      a2: '',
-      c: 'مرة واحدة',
-      f: 'رواه الترمذي'
-    },
-    {
-      a: 'اللَّهُمَّ إِنِّي أَمْسَيْتُ أُشْهِدُكَ، وَأُشْهِدُ حَمَلَةَ عَرْشِكَ، وَمَلَائِكَتَكَ، وَجَمِيعَ خَلْقِكَ، أَنَّكَ أَنْتَ اللَّهُ لَا إِلَهَ إِلَّا أَنْتَ، وَأَنَّ مُحَمَّداً عَبْدُكَ وَرَسُولُكَ',
-      a2: '',
-      c: '4 مرات',
-      f: 'أعتقه الله من النار — رواه أبو داود'
-    },
-    {
-      a: 'اللَّهُمَّ أَنْتَ رَبِّي لَا إِلَهَ إِلَّا أَنْتَ، خَلَقْتَنِي وَأَنَا عَبْدُكَ، وَأَنَا عَلَى عَهْدِكَ وَوَعْدِكَ مَا اسْتَطَعْتُ، أَعُوذُ بِكَ مِنْ شَرِّ مَا صَنَعْتُ، أَبُوءُ لَكَ بِنِعْمَتِكَ عَلَيَّ، وَأَبُوءُ بِذَنْبِي فَاغْفِرْ لِي فَإِنَّهُ لَا يَغْفِرُ الذُّنُوبَ إِلَّا أَنْتَ',
-      a2: '',
-      c: 'مرة واحدة',
-      f: 'سيد الاستغفار'
-    },
-    {
-      a: 'اللَّهُمَّ إِنِّي أَسْأَلُكَ الْعَفْوَ وَالْعَافِيَةَ فِي الدُّنْيَا وَالْآخِرَةِ',
-      a2: '',
-      c: 'مرة واحدة',
-      f: 'رواه أبو داود وابن ماجه'
-    }
+    {a:'آية الكرسي - البقرة 255',a2:'اللَّهُ لَا إِلَٰهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ لَا تَأْخُذُهُ سِنَةٌ وَلَا نَوْمٌ',c:'مرة واحدة',f:'من قالها حين يمسي أُجير من الجن حتى يصبح'},
+    {a:'أَمْسَيْنَا وَأَمْسَى الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ، لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ',a2:'',c:'مرة واحدة',f:'رواه مسلم'},
+    {a:'اللَّهُمَّ بِكَ أَمْسَيْنَا، وَبِكَ أَصْبَحْنَا، وَبِكَ نَحْيَا، وَبِكَ نَمُوتُ، وَإِلَيْكَ الْمَصِيرُ',a2:'',c:'مرة واحدة',f:'رواه الترمذي'},
+    {a:'اللَّهُمَّ إِنِّي أَمْسَيْتُ أُشْهِدُكَ، وَأُشْهِدُ حَمَلَةَ عَرْشِكَ، وَمَلَائِكَتَكَ، وَجَمِيعَ خَلْقِكَ، أَنَّكَ أَنْتَ اللَّهُ لَا إِلَهَ إِلَّا أَنْتَ، وَأَنَّ مُحَمَّداً عَبْدُكَ وَرَسُولُكَ',a2:'',c:'4 مرات',f:'أعتقه الله من النار — رواه أبو داود'},
+    {a:'اللَّهُمَّ أَنْتَ رَبِّي لَا إِلَهَ إِلَّا أَنْتَ، خَلَقْتَنِي وَأَنَا عَبْدُكَ، وَأَنَا عَلَى عَهْدِكَ وَوَعْدِكَ مَا اسْتَطَعْتُ، أَعُوذُ بِكَ مِنْ شَرِّ مَا صَنَعْتُ، أَبُوءُ لَكَ بِنِعْمَتِكَ عَلَيَّ، وَأَبُوءُ بِذَنْبِي فَاغْفِرْ لِي فَإِنَّهُ لَا يَغْفِرُ الذُّنُوبَ إِلَّا أَنْتَ',a2:'',c:'مرة واحدة',f:'سيد الاستغفار'},
+    {a:'اللَّهُمَّ إِنِّي أَسْأَلُكَ الْعَفْوَ وَالْعَافِيَةَ فِي الدُّنْيَا وَالْآخِرَةِ',a2:'',c:'مرة واحدة',f:'رواه أبو داود وابن ماجه'}
   ]
 };
 
 // ── INIT ──
 document.addEventListener('DOMContentLoaded', function() {
-  try {
-    var c = localStorage.getItem('nc');
-    if (c) S.convs = JSON.parse(c);
-  } catch(e) {}
+  try { var c = localStorage.getItem('nc'); if (c) S.convs = JSON.parse(c); } catch(e) {}
   try {
     var cfg = localStorage.getItem('ncfg');
     if (cfg) {
@@ -491,23 +428,16 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 });
 
-function saveConvs() {
-  try { localStorage.setItem('nc', JSON.stringify(S.convs)); } catch(e) {}
-}
+function saveConvs() { try { localStorage.setItem('nc', JSON.stringify(S.convs)); } catch(e) {} }
 
 function saveCfg() {
-  var mdl = document.getElementById('mdl');
-  if (mdl) S.cfg.model = mdl.value;
-  var ts = document.getElementById('tsrc');
-  if (ts) S.cfg.src = ts.checked;
-  var th = document.getElementById('thad');
-  if (th) S.cfg.had = th.checked;
-  var tm = document.getElementById('tmad');
-  if (tm) S.cfg.mad = tm.checked;
+  var mdl = document.getElementById('mdl'); if (mdl) S.cfg.model = mdl.value;
+  var ts = document.getElementById('tsrc'); if (ts) S.cfg.src = ts.checked;
+  var th = document.getElementById('thad'); if (th) S.cfg.had = th.checked;
+  var tm = document.getElementById('tmad'); if (tm) S.cfg.mad = tm.checked;
   try { localStorage.setItem('ncfg', JSON.stringify(S.cfg)); } catch(e) {}
 }
 
-// ── MODE ──
 function setMode(m, btn) {
   S.mode = m;
   var btns = document.querySelectorAll('.catbtn');
@@ -516,586 +446,282 @@ function setMode(m, btn) {
   var name = MODES[m] || m;
   document.getElementById('topmode').textContent = name;
   document.getElementById('badge').textContent = name;
-  var ph = {
-    islamic: 'اسألني عن القرآن والأحاديث والفقه...',
-    quran: 'اسألني عن تفسير آية...',
-    hadith: 'ابحث عن حديث أو تحقق من صحته...',
-    fiqh: 'اسألني عن حكم فقهي...',
-    prayer: 'اسألني عن أحكام الصلاة...',
-    study: 'اسألني أي سؤال دراسي...',
-    code: 'اكتب كوداً أو اشرح مفهوماً...',
-    general: 'اسألني عن أي موضوع...'
-  };
+  var ph = {islamic:'اسألني عن القرآن والأحاديث والفقه...',quran:'اسألني عن تفسير آية...',hadith:'ابحث عن حديث أو تحقق من صحته...',fiqh:'اسألني عن حكم فقهي...',prayer:'اسألني عن أحكام الصلاة...',study:'اسألني أي سؤال دراسي...',code:'اكتب كوداً أو اشرح مفهوماً...',general:'اسألني عن أي موضوع...'};
   document.getElementById('inp').placeholder = ph[m] || 'اكتب سؤالك...';
   renderSugs(m);
 }
 
 function renderSugs(m) {
-  var g = document.getElementById('sug');
-  if (!g) return;
-  var items = SUGS[m] || SUGS.general;
-  var html = '';
+  var g = document.getElementById('sug'); if (!g) return;
+  var items = SUGS[m] || SUGS.general; var html = '';
   for (var i = 0; i < items.length; i++) {
-    var s = items[i];
-    var q = s.q.replace(/'/g, '&#39;');
-    html += '<button class="sucard" onclick="qs(\'' + q + '\')">';
-    html += '<span class="suico">' + s.i + '</span>';
-    html += '<span class="sutxt">' + s.t + '</span>';
-    html += '</button>';
+    var s = items[i]; var q = s.q.replace(/'/g, '&#39;');
+    html += '<button class="sucard" onclick="qs(\'' + q + '\')"><span class="suico">' + s.i + '</span><span class="sutxt">' + s.t + '</span></button>';
   }
   g.innerHTML = html;
 }
 
-// ── CHAT ──
-function showWelcome() {
-  document.getElementById('welcome').style.display = 'flex';
-  document.getElementById('chat').style.display = 'none';
-  S.cid = null;
-}
-
-function showChat() {
-  document.getElementById('welcome').style.display = 'none';
-  document.getElementById('chat').style.display = 'flex';
-}
-
-function newChat() {
-  showWelcome();
-  var items = document.querySelectorAll('.hitem');
-  for (var i = 0; i < items.length; i++) items[i].classList.remove('on');
-}
-
-function uid() {
-  return Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
-}
+function showWelcome() { document.getElementById('welcome').style.display='flex'; document.getElementById('chat').style.display='none'; S.cid=null; }
+function showChat() { document.getElementById('welcome').style.display='none'; document.getElementById('chat').style.display='flex'; }
+function newChat() { showWelcome(); var items=document.querySelectorAll('.hitem'); for(var i=0;i<items.length;i++) items[i].classList.remove('on'); }
+function uid() { return Date.now().toString(36)+Math.random().toString(36).slice(2,6); }
 
 function mkConv(txt) {
   var id = uid();
-  var title = txt.length > 40 ? txt.slice(0, 40) + '...' : txt;
-  S.convs[id] = { id: id, title: title, mode: S.mode, msgs: [], at: Date.now() };
-  S.cid = id;
-  renderHist();
-  return id;
+  S.convs[id] = {id:id, title:txt.length>40?txt.slice(0,40)+'...':txt, mode:S.mode, msgs:[], at:Date.now()};
+  S.cid = id; renderHist(); return id;
 }
 
 function renderHist() {
-  var h = document.getElementById('hist');
-  if (!h) return;
-  var list = [];
-  var keys = Object.keys(S.convs);
-  for (var i = 0; i < keys.length; i++) list.push(S.convs[keys[i]]);
-  list.sort(function(a, b) { return b.at - a.at; });
-  list = list.slice(0, 30);
-  if (!list.length) {
-    h.innerHTML = '<div style="font-size:.74rem;color:var(--txt3);padding:.35rem .6rem">لا توجد محادثات بعد</div>';
-    return;
+  var h = document.getElementById('hist'); if (!h) return;
+  var list = []; var keys = Object.keys(S.convs);
+  for (var i=0;i<keys.length;i++) list.push(S.convs[keys[i]]);
+  list.sort(function(a,b){return b.at-a.at;}); list=list.slice(0,30);
+  if (!list.length) { h.innerHTML='<div style="font-size:.74rem;color:var(--txt3);padding:.35rem .6rem">لا توجد محادثات بعد</div>'; return; }
+  var html='';
+  for (var j=0;j<list.length;j++) {
+    var c=list[j];
+    html+='<div class="'+(c.id===S.cid?'hitem on':'hitem')+'" onclick="loadConv(\''+c.id+'\')" title="'+esc(c.title)+'">💬 '+esc(c.title)+'</div>';
   }
-  var html = '';
-  for (var j = 0; j < list.length; j++) {
-    var c = list[j];
-    var cls = c.id === S.cid ? 'hitem on' : 'hitem';
-    html += '<div class="' + cls + '" onclick="loadConv(\'' + c.id + '\')" title="' + esc(c.title) + '">💬 ' + esc(c.title) + '</div>';
-  }
-  h.innerHTML = html;
+  h.innerHTML=html;
 }
 
 function loadConv(id) {
-  var c = S.convs[id];
-  if (!c) return;
-  S.cid = id;
-  S.mode = c.mode;
-  var btns = document.querySelectorAll('.catbtn');
-  for (var i = 0; i < btns.length; i++) {
-    btns[i].classList.toggle('on', btns[i].getAttribute('data-m') === c.mode);
-  }
-  var name = MODES[c.mode] || c.mode;
-  document.getElementById('topmode').textContent = name;
-  document.getElementById('badge').textContent = name;
+  var c=S.convs[id]; if(!c) return;
+  S.cid=id; S.mode=c.mode;
+  var btns=document.querySelectorAll('.catbtn');
+  for(var i=0;i<btns.length;i++) btns[i].classList.toggle('on',btns[i].getAttribute('data-m')===c.mode);
+  document.getElementById('topmode').textContent=MODES[c.mode]||c.mode;
+  document.getElementById('badge').textContent=MODES[c.mode]||c.mode;
   showChat();
-  var msgs = document.getElementById('msgs');
-  msgs.innerHTML = '';
-  for (var j = 0; j < c.msgs.length; j++) addMsg(c.msgs[j].role, c.msgs[j].content, false);
-  scrollDown();
-  renderHist();
+  var msgs=document.getElementById('msgs'); msgs.innerHTML='';
+  for(var j=0;j<c.msgs.length;j++) addMsg(c.msgs[j].role,c.msgs[j].content,false);
+  scrollDown(); renderHist();
 }
 
-// ── SEND ──
-function qs(q) {
-  document.getElementById('inp').value = q;
-  send();
-}
+function qs(q) { document.getElementById('inp').value=q; send(); }
 
 function send() {
   if (S.busy) return;
-  var inp = document.getElementById('inp');
-  var txt = inp.value.trim();
-  if (!txt) return;
-  inp.value = '';
-  inp.style.height = 'auto';
-  if (!S.cid) { mkConv(txt); showChat(); }
-  var c = S.convs[S.cid];
-  c.msgs.push({ role: 'user', content: txt });
-  addMsg('user', txt, true);
-  scrollDown();
-  var tid = showTyping();
-  S.busy = true;
-  document.getElementById('sbtn').disabled = true;
+  var inp=document.getElementById('inp'); var txt=inp.value.trim(); if(!txt) return;
+  inp.value=''; inp.style.height='auto';
+  if(!S.cid){mkConv(txt);showChat();}
+  var c=S.convs[S.cid];
+  c.msgs.push({role:'user',content:txt});
+  addMsg('user',txt,true); scrollDown();
+  var tid=showTyping(); S.busy=true; document.getElementById('sbtn').disabled=true;
   callGemini(c.msgs, S.mode, function(reply) {
     removeTyping(tid);
-    c.msgs.push({ role: 'assistant', content: reply });
-    addMsg('assistant', reply, true);
-    scrollDown();
-    saveConvs();
-    renderHist();
-    S.busy = false;
-    document.getElementById('sbtn').disabled = false;
-    document.getElementById('inp').focus();
+    c.msgs.push({role:'assistant',content:reply});
+    addMsg('assistant',reply,true); scrollDown(); saveConvs(); renderHist();
+    S.busy=false; document.getElementById('sbtn').disabled=false; document.getElementById('inp').focus();
   }, function(errMsg) {
-    removeTyping(tid);
-    addErrMsg(errMsg);
-    S.busy = false;
-    document.getElementById('sbtn').disabled = false;
-    document.getElementById('inp').focus();
+    removeTyping(tid); addErrMsg(errMsg);
+    S.busy=false; document.getElementById('sbtn').disabled=false; document.getElementById('inp').focus();
   });
 }
 
-// ── GEMINI API ──
+// ── GEMINI API - عبر /api/chat (Vercel Serverless Function) ──
 function callGemini(msgs, mode, onSuccess, onError) {
   var sys = PROMPTS[mode] || PROMPTS.islamic;
-  var model = S.cfg.model || 'gemini-2.0-flash';
-  // System prompt as first exchange, then conversation
   var contents = [
-    { role: 'user', parts: [{ text: sys }] },
-    { role: 'model', parts: [{ text: 'حسناً.' }] }
+    {role:'user', parts:[{text:sys}]},
+    {role:'model', parts:[{text:'حسناً.'}]}
   ];
-  for (var i = 0; i < msgs.length; i++) {
+  for (var i=0; i<msgs.length; i++) {
     contents.push({
-      role: msgs[i].role === 'assistant' ? 'model' : 'user',
-      parts: [{ text: msgs[i].content }]
+      role: msgs[i].role==='assistant' ? 'model' : 'user',
+      parts: [{text: msgs[i].content}]
     });
   }
-  var url = 'https://generativelanguage.googleapis.com/v1beta/models/' + model + ':generateContent?key=' + API_KEY;
-  var xhr = new XMLHttpRequest();
-  xhr.open('POST', url, true);
-  xhr.setRequestHeader('Content-Type', 'application/json');
-  xhr.timeout = 30000;
-  xhr.onreadystatechange = function() {
-    if (xhr.readyState !== 4) return;
-    if (xhr.status === 0) { onError('خطأ في الاتصال بالإنترنت.'); return; }
-    try {
-      var data = JSON.parse(xhr.responseText);
-      if (xhr.status !== 200) {
-        onError('خطأ ' + xhr.status + ': ' + ((data.error && data.error.message) || 'API Error'));
-        return;
+  fetch('/api/chat', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({contents: contents, model: S.cfg.model})
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(data) {
+    if (data.error) { onError(data.error); return; }
+    if (data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts) {
+      var text = '';
+      for (var i=0; i<data.candidates[0].content.parts.length; i++) {
+        text += data.candidates[0].content.parts[i].text || '';
       }
-      if (data.promptFeedback && data.promptFeedback.blockReason) {
-        onError('محتوى محظور.'); return;
-      }
-      if (data.candidates && data.candidates[0] && data.candidates[0].content &&
-          data.candidates[0].content.parts && data.candidates[0].content.parts[0]) {
-        var text = '';
-        for (var i = 0; i < data.candidates[0].content.parts.length; i++) {
-          text += data.candidates[0].content.parts[i].text || '';
-        }
-        onSuccess(text);
-      } else {
-        onError('لم يتم استلام رد من النموذج.');
-      }
-    } catch(e) {
-      onError('خطأ في معالجة الرد: ' + e.message);
+      onSuccess(text);
+    } else {
+      onError('لم يتم استلام رد من النموذج.');
     }
-  };
-  xhr.ontimeout = function() { onError('انتهت مهلة الاتصال. حاول مجدداً.'); };
-  xhr.onerror = function() { onError('خطأ في الاتصال. تحقق من الإنترنت.'); };
-  xhr.send(JSON.stringify({ contents: contents, generationConfig: { maxOutputTokens: 2048, temperature: 0.7 } }));
+  })
+  .catch(function(e) { onError('خطأ في الاتصال: ' + e.message); });
 }
 
-// ── RENDER MESSAGES ──
 function addMsg(role, content, animate) {
-  var c = document.getElementById('msgs');
-  var isU = role === 'user';
-  var el = document.createElement('div');
-  el.className = animate ? 'msg new' : 'msg';
-  var body = isU ? '<p>' + esc(content) + '</p>' : fmt(content);
-  var acts = isU ? '' : '<div class="macts"><button class="mact" onclick="cp(this)">📋 نسخ</button><button class="mact" onclick="shareMsg(this)">🔗 مشاركة</button></div>';
-  el.innerHTML = '<div class="mava ' + (isU ? 'u' : 'a') + '">' + (isU ? 'أ' : 'ن') + '</div>' +
-    '<div class="mcon"><div class="mwho">' + (isU ? 'أنت' : 'نور AI') + '</div>' +
-    '<div class="mtxt">' + body + '</div>' + acts + '</div>';
+  var c=document.getElementById('msgs'); var isU=role==='user';
+  var el=document.createElement('div'); el.className=animate?'msg new':'msg';
+  var body=isU?'<p>'+esc(content)+'</p>':fmt(content);
+  var acts=isU?'':'<div class="macts"><button class="mact" onclick="cp(this)">📋 نسخ</button><button class="mact" onclick="shareMsg(this)">🔗 مشاركة</button></div>';
+  el.innerHTML='<div class="mava '+(isU?'u':'a')+'">'+(isU?'أ':'ن')+'</div><div class="mcon"><div class="mwho">'+(isU?'أنت':'نور AI')+'</div><div class="mtxt">'+body+'</div>'+acts+'</div>';
   c.appendChild(el);
 }
 
 function addErrMsg(txt) {
-  var c = document.getElementById('msgs');
-  var el = document.createElement('div');
-  el.className = 'msg';
-  el.innerHTML = '<div class="mava a" style="background:rgba(224,80,80,0.3);color:var(--red)">!</div>' +
-    '<div class="mcon"><div class="mwho" style="color:var(--red)">خطأ</div>' +
-    '<div class="mtxt" style="color:#f08080"><p>' + esc(txt) + '</p></div></div>';
-  c.appendChild(el);
-  scrollDown();
+  var c=document.getElementById('msgs'); var el=document.createElement('div'); el.className='msg';
+  el.innerHTML='<div class="mava a" style="background:rgba(224,80,80,0.3);color:var(--red)">!</div><div class="mcon"><div class="mwho" style="color:var(--red)">خطأ</div><div class="mtxt" style="color:#f08080"><p>'+esc(txt)+'</p></div></div>';
+  c.appendChild(el); scrollDown();
 }
 
 function showTyping() {
-  var c = document.getElementById('msgs');
-  var id = 'ty-' + uid();
-  var el = document.createElement('div');
-  el.className = 'msg';
-  el.id = id;
-  el.innerHTML = '<div class="mava a">ن</div><div class="mcon"><div class="mwho">نور AI</div>' +
-    '<div class="typing"><div class="tdot"></div><div class="tdot"></div><div class="tdot"></div></div></div>';
-  c.appendChild(el);
-  scrollDown();
-  return id;
+  var c=document.getElementById('msgs'); var id='ty-'+uid();
+  var el=document.createElement('div'); el.className='msg'; el.id=id;
+  el.innerHTML='<div class="mava a">ن</div><div class="mcon"><div class="mwho">نور AI</div><div class="typing"><div class="tdot"></div><div class="tdot"></div><div class="tdot"></div></div></div>';
+  c.appendChild(el); scrollDown(); return id;
 }
 
-function removeTyping(id) {
-  var el = document.getElementById(id);
-  if (el) el.remove();
-}
+function removeTyping(id) { var el=document.getElementById(id); if(el) el.remove(); }
+function scrollDown() { var c=document.getElementById('chat'); if(c) setTimeout(function(){c.scrollTop=c.scrollHeight;},50); }
 
-function scrollDown() {
-  var c = document.getElementById('chat');
-  if (c) setTimeout(function() { c.scrollTop = c.scrollHeight; }, 50);
-}
-
-// ── FORMAT (no nested template literals) ──
 function fmt(text) {
-  if (!text) return '';
-  var lines = text.split('\n');
-  var out = [];
-  var inCode = false;
-  var codeLines = [];
-  var listLines = [];
-  var listType = '';
-
+  if(!text) return '';
+  var lines=text.split('\n'); var out=[]; var inCode=false; var codeLines=[]; var listLines=[]; var listType='';
   function flushList() {
-    if (!listLines.length) return;
-    var tag = listType === 'ol' ? 'ol' : 'ul';
-    var items = '';
-    for (var k = 0; k < listLines.length; k++) {
-      items += '<li>' + listLines[k] + '</li>';
-    }
-    out.push('<' + tag + '>' + items + '</' + tag + '>');
-    listLines = [];
-    listType = '';
+    if(!listLines.length) return;
+    var tag=listType==='ol'?'ol':'ul'; var items='';
+    for(var k=0;k<listLines.length;k++) items+='<li>'+listLines[k]+'</li>';
+    out.push('<'+tag+'>'+items+'</'+tag+'>'); listLines=[]; listType='';
   }
-
-  for (var i = 0; i < lines.length; i++) {
-    var raw = lines[i];
-
-    if (raw.slice(0, 3) === '```') {
-      if (!inCode) {
-        flushList();
-        inCode = true;
-        codeLines = [];
-      } else {
-        inCode = false;
-        out.push('<pre><code>' + esc(codeLines.join('\n')) + '</code></pre>');
-        codeLines = [];
-      }
-      continue;
-    }
-    if (inCode) { codeLines.push(raw); continue; }
-
-    if ((raw.indexOf('\uFD3E') !== -1 || raw.indexOf('\u00AB') !== -1)) {
-      flushList();
-      out.push('<blockquote>' + esc(raw) + '</blockquote>');
-      continue;
-    }
-
-    if (/^#{1,3} /.test(raw)) {
-      flushList();
-      out.push('<h3>' + il(raw.replace(/^#{1,3} /, '')) + '</h3>');
-      continue;
-    }
-
-    if (/^[-*] /.test(raw)) {
-      if (listType !== 'ul') { flushList(); listType = 'ul'; }
-      listLines.push(il(raw.replace(/^[-*] /, '')));
-      continue;
-    }
-
-    if (/^\d+\. /.test(raw)) {
-      if (listType !== 'ol') { flushList(); listType = 'ol'; }
-      listLines.push(il(raw.replace(/^\d+\. /, '')));
-      continue;
-    }
-
-    if (raw.trim() === '') {
-      flushList();
-      out.push('');
-      continue;
-    }
-
-    flushList();
-    out.push(il(raw));
+  for(var i=0;i<lines.length;i++) {
+    var raw=lines[i];
+    if(raw.slice(0,3)==='```'){if(!inCode){flushList();inCode=true;codeLines=[];}else{inCode=false;out.push('<pre><code>'+esc(codeLines.join('\n'))+'</code></pre>');codeLines=[];}continue;}
+    if(inCode){codeLines.push(raw);continue;}
+    if(raw.indexOf('\uFD3E')!==-1||raw.indexOf('\u00AB')!==-1){flushList();out.push('<blockquote>'+esc(raw)+'</blockquote>');continue;}
+    if(/^#{1,3} /.test(raw)){flushList();out.push('<h3>'+il(raw.replace(/^#{1,3} /,''))+'</h3>');continue;}
+    if(/^[-*] /.test(raw)){if(listType!=='ul'){flushList();listType='ul';}listLines.push(il(raw.replace(/^[-*] /,'')));continue;}
+    if(/^\d+\. /.test(raw)){if(listType!=='ol'){flushList();listType='ol';}listLines.push(il(raw.replace(/^\d+\. /,'')));continue;}
+    if(raw.trim()===''){flushList();out.push('');continue;}
+    flushList();out.push(il(raw));
   }
-
   flushList();
-  if (inCode && codeLines.length) {
-    out.push('<pre><code>' + esc(codeLines.join('\n')) + '</code></pre>');
+  if(inCode&&codeLines.length) out.push('<pre><code>'+esc(codeLines.join('\n'))+'</code></pre>');
+  var parts=[]; var para=[];
+  function flushPara(){if(para.length){parts.push('<p>'+para.join('<br>')+'</p>');para=[];}}
+  for(var j=0;j<out.length;j++){
+    var p=out[j];
+    if(p===''){flushPara();continue;}
+    if(p.charAt(0)==='<'&&p.slice(0,3)!=='<br'){flushPara();parts.push(p);}
+    else{para.push(p);}
   }
-
-  var parts = [];
-  var para = [];
-
-  function flushPara() {
-    if (para.length) {
-      parts.push('<p>' + para.join('<br>') + '</p>');
-      para = [];
-    }
-  }
-
-  for (var j = 0; j < out.length; j++) {
-    var p = out[j];
-    if (p === '') { flushPara(); continue; }
-    if (p.charAt(0) === '<' && p.slice(0, 3) !== '<br') {
-      flushPara();
-      parts.push(p);
-    } else {
-      para.push(p);
-    }
-  }
-  flushPara();
-  return parts.join('\n');
+  flushPara(); return parts.join('\n');
 }
 
 function il(t) {
-  var s = esc(t);
-  s = s.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
-  s = s.replace(/\*(.+?)\*/g, '<em>$1</em>');
-  s = s.replace(/`([^`]+)`/g, '<code>$1</code>');
+  var s=esc(t);
+  s=s.replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>');
+  s=s.replace(/\*(.+?)\*/g,'<em>$1</em>');
+  s=s.replace(/`([^`]+)`/g,'<code>$1</code>');
   return s;
 }
 
 function esc(s) {
-  return String(s || '').replace(/[&<>"']/g, function(m) {
-    if (m === '&') return '&amp;';
-    if (m === '<') return '&lt;';
-    if (m === '>') return '&gt;';
-    if (m === '"') return '&quot;';
-    return '&#039;';
+  return String(s||'').replace(/[&<>"']/g,function(m){
+    if(m==='&') return '&amp;'; if(m==='<') return '&lt;'; if(m==='>') return '&gt;'; if(m==='"') return '&quot;'; return '&#039;';
   });
 }
 
 function cp(btn) {
-  var t = btn.closest('.mcon').querySelector('.mtxt').innerText;
-  navigator.clipboard.writeText(t).then(function() {
-    toast('تم النسخ', 'ok');
-    btn.textContent = 'تم ✓';
-    setTimeout(function() { btn.textContent = '📋 نسخ'; }, 2000);
-  }).catch(function() { toast('تعذر النسخ', 'er'); });
+  var t=btn.closest('.mcon').querySelector('.mtxt').innerText;
+  navigator.clipboard.writeText(t).then(function(){toast('تم النسخ','ok');btn.textContent='تم ✓';setTimeout(function(){btn.textContent='📋 نسخ';},2000);}).catch(function(){toast('تعذر النسخ','er');});
 }
 
 function shareMsg(btn) {
-  var t = btn.closest('.mcon').querySelector('.mtxt').innerText;
-  if (navigator.share) {
-    navigator.share({ title: 'نور AI', text: t }).catch(function() {});
-  } else {
-    navigator.clipboard.writeText(t).then(function() { toast('تم النسخ للمشاركة', 'ok'); });
-  }
+  var t=btn.closest('.mcon').querySelector('.mtxt').innerText;
+  if(navigator.share){navigator.share({title:'نور AI',text:t}).catch(function(){});}
+  else{navigator.clipboard.writeText(t).then(function(){toast('تم النسخ للمشاركة','ok');});}
 }
 
 function delChat() {
-  if (!S.cid) return;
-  if (!confirm('حذف هذه المحادثة؟')) return;
-  delete S.convs[S.cid];
-  saveConvs();
-  renderHist();
-  showWelcome();
-  toast('تم الحذف');
+  if(!S.cid) return; if(!confirm('حذف هذه المحادثة؟')) return;
+  delete S.convs[S.cid]; saveConvs(); renderHist(); showWelcome(); toast('تم الحذف');
 }
 
-// ── PRAYER TIMES ──
 function getPrayer() {
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(
-      function(p) { loadPT(p.coords.latitude, p.coords.longitude); },
-      function() { loadPTCity('Mecca', 'Saudi Arabia'); },
-      { timeout: 5000 }
-    );
-  } else {
-    loadPTCity('Mecca', 'Saudi Arabia');
-  }
+  if(navigator.geolocation){navigator.geolocation.getCurrentPosition(function(p){loadPT(p.coords.latitude,p.coords.longitude);},function(){loadPTCity('Mecca','Saudi Arabia');},{timeout:5000});}
+  else{loadPTCity('Mecca','Saudi Arabia');}
 }
 
-function loadPT(lat, lng) {
-  var d = new Date();
-  var ds = d.getDate() + '-' + (d.getMonth() + 1) + '-' + d.getFullYear();
-  fetch('https://api.aladhan.com/v1/timings/' + ds + '?latitude=' + lat + '&longitude=' + lng + '&method=4')
-    .then(function(r) { return r.json(); })
-    .then(function(data) {
-      if (data.status === 'OK') {
-        showPT(data.data.timings);
-        return fetch('https://nominatim.openstreetmap.org/reverse?lat=' + lat + '&lon=' + lng + '&format=json', { headers: { 'Accept-Language': 'ar' } });
-      }
-    })
-    .then(function(r) { if (r) return r.json(); })
-    .then(function(gd) {
-      if (gd && gd.address) {
-        document.getElementById('pcity').textContent = gd.address.city || gd.address.town || gd.address.state || 'موقعك';
-      }
-    })
-    .catch(function() { document.getElementById('pcity').textContent = 'موقعك'; });
+function loadPT(lat,lng) {
+  var d=new Date(); var ds=d.getDate()+'-'+(d.getMonth()+1)+'-'+d.getFullYear();
+  fetch('https://api.aladhan.com/v1/timings/'+ds+'?latitude='+lat+'&longitude='+lng+'&method=4')
+    .then(function(r){return r.json();})
+    .then(function(data){if(data.status==='OK'){showPT(data.data.timings);return fetch('https://nominatim.openstreetmap.org/reverse?lat='+lat+'&lon='+lng+'&format=json',{headers:{'Accept-Language':'ar'}});}})
+    .then(function(r){if(r) return r.json();})
+    .then(function(gd){if(gd&&gd.address){document.getElementById('pcity').textContent=gd.address.city||gd.address.town||gd.address.state||'موقعك';}})
+    .catch(function(){document.getElementById('pcity').textContent='موقعك';});
 }
 
-function loadPTCity(city, country) {
-  var d = new Date();
-  var ds = d.getDate() + '-' + (d.getMonth() + 1) + '-' + d.getFullYear();
-  fetch('https://api.aladhan.com/v1/timingsByCity/' + ds + '?city=' + encodeURIComponent(city) + '&country=' + encodeURIComponent(country) + '&method=4')
-    .then(function(r) { return r.json(); })
-    .then(function(data) {
-      if (data.status === 'OK') {
-        showPT(data.data.timings);
-        document.getElementById('pcity').textContent = city;
-      }
-    })
-    .catch(function() {});
+function loadPTCity(city,country) {
+  var d=new Date(); var ds=d.getDate()+'-'+(d.getMonth()+1)+'-'+d.getFullYear();
+  fetch('https://api.aladhan.com/v1/timingsByCity/'+ds+'?city='+encodeURIComponent(city)+'&country='+encodeURIComponent(country)+'&method=4')
+    .then(function(r){return r.json();})
+    .then(function(data){if(data.status==='OK'){showPT(data.data.timings);document.getElementById('pcity').textContent=city;}})
+    .catch(function(){});
 }
 
 function showPT(t) {
-  var map = [
-    { id: 'pf', k: 'Fajr', n: 'الفجر' },
-    { id: 'pd', k: 'Dhuhr', n: 'الظهر' },
-    { id: 'pa', k: 'Asr', n: 'العصر' },
-    { id: 'pm', k: 'Maghrib', n: 'المغرب' },
-    { id: 'pi', k: 'Isha', n: 'العشاء' }
-  ];
-  var now = new Date();
-  var nm = now.getHours() * 60 + now.getMinutes();
-  var minD = Infinity;
-  var nextN = '';
-  var nextT = '';
-  var times = {};
-
-  for (var i = 0; i < map.length; i++) {
-    var el = document.getElementById(map[i].id);
-    if (!el) continue;
-    var ts = (t[map[i].k] || '').replace(/\s*\(.*\)/, '').trim();
-    if (!ts) continue;
-    el.classList.remove('next');
-    el.textContent = to12(ts);
-    var parts = ts.split(':');
-    var h = parseInt(parts[0]);
-    var m = parseInt(parts[1]);
-    var diff = (h * 60 + m) - nm;
-    times[map[i].id] = diff;
-    if (diff > 0 && diff < minD) {
-      minD = diff;
-      nextN = map[i].n;
-      nextT = to12(ts);
-    }
+  var map=[{id:'pf',k:'Fajr',n:'الفجر'},{id:'pd',k:'Dhuhr',n:'الظهر'},{id:'pa',k:'Asr',n:'العصر'},{id:'pm',k:'Maghrib',n:'المغرب'},{id:'pi',k:'Isha',n:'العشاء'}];
+  var now=new Date(); var nm=now.getHours()*60+now.getMinutes(); var minD=Infinity; var nextN=''; var nextT=''; var times={};
+  for(var i=0;i<map.length;i++){
+    var el=document.getElementById(map[i].id); if(!el) continue;
+    var ts=(t[map[i].k]||'').replace(/\s*\(.*\)/,'').trim(); if(!ts) continue;
+    el.classList.remove('next'); el.textContent=to12(ts);
+    var parts=ts.split(':'); var h=parseInt(parts[0]); var m=parseInt(parts[1]);
+    var diff=(h*60+m)-nm; times[map[i].id]=diff;
+    if(diff>0&&diff<minD){minD=diff;nextN=map[i].n;nextT=to12(ts);}
   }
-
-  for (var j = 0; j < map.length; j++) {
-    if (times[map[j].id] === minD) {
-      var el2 = document.getElementById(map[j].id);
-      if (el2) el2.classList.add('next');
-    }
-  }
-
-  var np = document.getElementById('pnext');
-  if (np && nextN) {
-    var hh = Math.floor(minD / 60);
-    var mm = minD % 60;
-    var left = hh > 0 ? hh + ' ساعة و ' + mm + ' دقيقة' : mm + ' دقيقة';
-    np.textContent = 'القادمة: ' + nextN + ' ' + nextT + ' · بعد ' + left;
-  }
+  for(var j=0;j<map.length;j++){if(times[map[j].id]===minD){var el2=document.getElementById(map[j].id);if(el2)el2.classList.add('next');}}
+  var np=document.getElementById('pnext');
+  if(np&&nextN){var hh=Math.floor(minD/60);var mm=minD%60;np.textContent='القادمة: '+nextN+' '+nextT+' · بعد '+(hh>0?hh+' ساعة و '+mm+' دقيقة':mm+' دقيقة');}
 }
 
 function to12(t) {
-  if (!t) return '--:--';
-  var parts = t.split(':');
-  var h = parseInt(parts[0]);
-  var m = parseInt(parts[1]);
-  var ampm = h >= 12 ? 'م' : 'ص';
-  var h12 = h % 12 || 12;
-  return h12 + ':' + (m < 10 ? '0' : '') + m + ' ' + ampm;
+  if(!t) return '--:--';
+  var parts=t.split(':'); var h=parseInt(parts[0]); var m=parseInt(parts[1]);
+  return (h%12||12)+':'+(m<10?'0':'')+m+' '+(h>=12?'م':'ص');
 }
 
-// ── SIDEBAR ──
 function toggleSB() {
-  var sb = document.getElementById('sb');
-  var ob = document.getElementById('openbtn');
-  var bd = document.getElementById('backdrop');
-  if (window.innerWidth <= 680) {
-    var closing = !sb.classList.contains('closed');
-    sb.classList.toggle('closed');
-    if (bd) bd.style.display = closing ? 'none' : 'block';
-  } else {
-    S.sbOpen = !S.sbOpen;
-    sb.classList.toggle('closed', !S.sbOpen);
-    if (ob) ob.style.display = S.sbOpen ? 'none' : 'flex';
-  }
+  var sb=document.getElementById('sb'); var ob=document.getElementById('openbtn'); var bd=document.getElementById('backdrop');
+  if(window.innerWidth<=680){var closing=!sb.classList.contains('closed');sb.classList.toggle('closed');if(bd)bd.style.display=closing?'none':'block';}
+  else{S.sbOpen=!S.sbOpen;sb.classList.toggle('closed',!S.sbOpen);if(ob)ob.style.display=S.sbOpen?'none':'flex';}
 }
 
-function closeSB() {
-  var sb = document.getElementById('sb');
-  var bd = document.getElementById('backdrop');
-  sb.classList.add('closed');
-  if (bd) bd.style.display = 'none';
-}
-
-// backdrop handles mobile close
-
-// ── SETTINGS ──
-function openSet() {
-  document.getElementById('smod').style.display = 'flex';
-  var mdl = document.getElementById('mdl');
-  if (mdl) mdl.value = S.cfg.model;
-}
-function closeSet() { document.getElementById('smod').style.display = 'none'; }
-
-// ── AZKAR ──
-function openAzkar() {
-  document.getElementById('amod').style.display = 'flex';
-  showAzkar('sabah');
-}
-function closeAzkar() { document.getElementById('amod').style.display = 'none'; }
+function closeSB(){var sb=document.getElementById('sb');var bd=document.getElementById('backdrop');sb.classList.add('closed');if(bd)bd.style.display='none';}
+function openSet(){document.getElementById('smod').style.display='flex';var mdl=document.getElementById('mdl');if(mdl)mdl.value=S.cfg.model;}
+function closeSet(){document.getElementById('smod').style.display='none';}
+function openAzkar(){document.getElementById('amod').style.display='flex';showAzkar('sabah');}
+function closeAzkar(){document.getElementById('amod').style.display='none';}
 
 function showAzkar(type) {
-  var bs = document.getElementById('btn-s');
-  var bm = document.getElementById('btn-m');
-  if (type === 'sabah') {
-    bs.classList.add('on');
-    bm.classList.remove('on');
-  } else {
-    bm.classList.add('on');
-    bs.classList.remove('on');
+  var bs=document.getElementById('btn-s'); var bm=document.getElementById('btn-m');
+  if(type==='sabah'){bs.classList.add('on');bm.classList.remove('on');}else{bm.classList.add('on');bs.classList.remove('on');}
+  var data=AZKAR[type]; var html='';
+  for(var i=0;i<data.length;i++){
+    var z=data[i];
+    html+='<div class="azkar-card"><div class="azkar-arabic">'+z.a+'</div>';
+    if(z.a2) html+='<div class="azkar-arabic" style="font-size:.95rem;opacity:.8">'+z.a2+'</div>';
+    html+='<div class="azkar-count">🔄 '+z.c+'</div><div class="azkar-fadl">✨ '+z.f+'</div></div>';
   }
-  var data = AZKAR[type];
-  var html = '';
-  for (var i = 0; i < data.length; i++) {
-    var z = data[i];
-    html += '<div class="azkar-card">';
-    html += '<div class="azkar-arabic">' + z.a + '</div>';
-    if (z.a2) html += '<div class="azkar-arabic" style="font-size:.95rem;opacity:.8">' + z.a2 + '</div>';
-    html += '<div class="azkar-count">🔄 ' + z.c + '</div>';
-    html += '<div class="azkar-fadl">✨ ' + z.f + '</div>';
-    html += '</div>';
-  }
-  document.getElementById('azkar-list').innerHTML = html;
+  document.getElementById('azkar-list').innerHTML=html;
 }
 
-// ── UTILS ──
-function clearAll() {
-  if (!confirm('حذف جميع المحادثات؟')) return;
-  S.convs = {};
-  S.cid = null;
-  saveConvs();
-  renderHist();
-  showWelcome();
-  closeSet();
-  toast('تم الحذف', 'ok');
+function clearAll(){
+  if(!confirm('حذف جميع المحادثات؟')) return;
+  S.convs={}; S.cid=null; saveConvs(); renderHist(); showWelcome(); closeSet(); toast('تم الحذف','ok');
 }
 
 var _tid;
-function toast(msg, type) {
-  var t = document.getElementById('toast');
-  t.textContent = msg;
-  t.className = type || '';
-  t.style.display = 'block';
-  clearTimeout(_tid);
-  _tid = setTimeout(function() { t.style.display = 'none'; }, 3000);
+function toast(msg,type){
+  var t=document.getElementById('toast'); t.textContent=msg; t.className=type||''; t.style.display='block';
+  clearTimeout(_tid); _tid=setTimeout(function(){t.style.display='none';},3000);
 }
 </script>
 </body>
