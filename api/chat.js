@@ -1,43 +1,47 @@
-export default async function handler(req, res) {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+export const config = { runtime: 'edge' };
 
-  if (req.method === 'OPTIONS') return res.status(200).end();
-  if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
+export default async function handler(req) {
+  // CORS headers
+  const headers = {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type',
+  };
+
+  if (req.method === 'OPTIONS') {
+    return new Response(null, { status: 204, headers });
+  }
+
+  if (req.method !== 'POST') {
+    return new Response('Method Not Allowed', { status: 405, headers });
+  }
 
   try {
-    const { contents, model } = req.body;
-    const API_KEY = process.env.GEMINI_API_KEY;
+    const body = await req.json();
 
-    if (!API_KEY) {
-      return res.status(500).json({ error: 'API key not configured' });
-    }
-
-    const geminiModel = model || 'gemini-2.0-flash';
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/${geminiModel}:generateContent?key=${API_KEY}`;
-
-    const response = await fetch(url, {
+    const anthropicResp = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        contents,
-        generationConfig: {
-          maxOutputTokens: 2048,
-          temperature: 0.7
-        }
-      })
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': process.env.ANTHROPIC_API_KEY,
+        'anthropic-version': '2023-06-01',
+      },
+      body: JSON.stringify(body),
     });
 
-    const data = await response.json();
-
-    if (!response.ok) {
-      return res.status(response.status).json({ error: data.error?.message || 'Gemini API error' });
-    }
-
-    return res.status(200).json(data);
-
+    // Stream the response back
+    return new Response(anthropicResp.body, {
+      status: anthropicResp.status,
+      headers: {
+        ...headers,
+        'Content-Type': anthropicResp.headers.get('Content-Type') || 'text/event-stream',
+        'Cache-Control': 'no-cache',
+      },
+    });
   } catch (err) {
-    return res.status(500).json({ error: err.message || 'Server error' });
+    return new Response(JSON.stringify({ error: err.message }), {
+      status: 500,
+      headers: { ...headers, 'Content-Type': 'application/json' },
+    });
   }
 }
