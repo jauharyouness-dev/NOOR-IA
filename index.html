@@ -256,8 +256,8 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--txt);dire
         <h3>🤖 نموذج الذكاء الاصطناعي</h3>
         <select class="ssel" id="mdl" onchange="saveCfg()">
           <option value="gemini-2.0-flash">Gemini 2.0 Flash ⚡ الأسرع</option>
-          <option value="gemini-1.5-pro">Gemini 1.5 Pro 🧠 الأقوى</option>
-          <option value="gemini-1.5-flash">Gemini 1.5 Flash ⚖️ متوازن</option>
+          <option value="gemini-2.0-flash">Gemini 1.5 Pro 🧠 الأقوى</option>
+          <option value="gemini-2.0-flash">Gemini 1.5 Flash ⚖️ متوازن</option>
         </select>
       </div>
       <div class="ssec">
@@ -309,7 +309,7 @@ var S = {
   cid: null,
   busy: false,
   sbOpen: true,
-  cfg: { model: 'gemini-1.5-flash', src: true, had: true, mad: true }
+  cfg: { model: 'gemini-2.0-flash', src: true, had: true, mad: true }
 };
 
 var PROMPTS = {
@@ -661,59 +661,52 @@ function send() {
 // ── GEMINI API ──
 function callGemini(msgs, mode, onSuccess, onError) {
   var sys = PROMPTS[mode] || PROMPTS.islamic;
-  var model = S.cfg.model || 'gemini-1.5-flash';
-  var contents = [];
-  // Add system context with first user message
-  var firstMsg = msgs[0] ? sys + '\n\nالسؤال: ' + msgs[0].content : sys;
-  contents.push({ role: 'user', parts: [{ text: firstMsg }] });
-  if (msgs[0]) contents.push({ role: 'model', parts: [{ text: 'حسناً، سأجيب على سؤالك.' }] });
-  for (var i = 1; i < msgs.length; i++) {
+  var model = S.cfg.model || 'gemini-2.0-flash';
+  // System prompt as first exchange, then conversation
+  var contents = [
+    { role: 'user', parts: [{ text: sys }] },
+    { role: 'model', parts: [{ text: 'حسناً.' }] }
+  ];
+  for (var i = 0; i < msgs.length; i++) {
     contents.push({
       role: msgs[i].role === 'assistant' ? 'model' : 'user',
       parts: [{ text: msgs[i].content }]
     });
   }
   var url = 'https://generativelanguage.googleapis.com/v1beta/models/' + model + ':generateContent?key=' + API_KEY;
-  var controller = typeof AbortController !== 'undefined' ? new AbortController() : null;
-  var timer = controller ? setTimeout(function() { controller.abort(); }, 30000) : null;
-  fetch(url, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ contents: contents, generationConfig: { maxOutputTokens: 2048, temperature: 0.7 } }),
-    signal: controller ? controller.signal : undefined
-  }).then(function(r) { if (timer) clearTimeout(timer); return r; })
-  .then(function(res) {
-    if (!res.ok) {
-      return res.json().then(function(ed) {
-        throw new Error(res.status + ': ' + ((ed && ed.error && ed.error.message) || 'Error'));
-      });
-    }
-    return res.json();
-  })
-  .then(function(data) {
-    if (data.promptFeedback && data.promptFeedback.blockReason) {
-      throw new Error('محتوى محظور');
-    }
-    if (data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts && data.candidates[0].content.parts[0] && data.candidates[0].content.parts[0].text) {
-      var text = '';
-      for (var i = 0; i < data.candidates[0].content.parts.length; i++) {
-        text += data.candidates[0].content.parts[i].text || '';
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', url, true);
+  xhr.setRequestHeader('Content-Type', 'application/json');
+  xhr.timeout = 30000;
+  xhr.onreadystatechange = function() {
+    if (xhr.readyState !== 4) return;
+    if (xhr.status === 0) { onError('خطأ في الاتصال بالإنترنت.'); return; }
+    try {
+      var data = JSON.parse(xhr.responseText);
+      if (xhr.status !== 200) {
+        onError('خطأ ' + xhr.status + ': ' + ((data.error && data.error.message) || 'API Error'));
+        return;
       }
-      onSuccess(text);
-    } else if (data.candidates && data.candidates[0] && data.candidates[0].finishReason === 'SAFETY') {
-      throw new Error('حُظر بواسطة نظام السلامة');
-    } else {
-      throw new Error('لم يتم استلام رد.');
+      if (data.promptFeedback && data.promptFeedback.blockReason) {
+        onError('محتوى محظور.'); return;
+      }
+      if (data.candidates && data.candidates[0] && data.candidates[0].content &&
+          data.candidates[0].content.parts && data.candidates[0].content.parts[0]) {
+        var text = '';
+        for (var i = 0; i < data.candidates[0].content.parts.length; i++) {
+          text += data.candidates[0].content.parts[i].text || '';
+        }
+        onSuccess(text);
+      } else {
+        onError('لم يتم استلام رد من النموذج.');
+      }
+    } catch(e) {
+      onError('خطأ في معالجة الرد: ' + e.message);
     }
-  })
-  .catch(function(e) {
-    var msg = 'خطأ: ' + em.slice(0, 120);
-    var em = String(e.message || '');
-    if (em.indexOf('401') !== -1 || em.indexOf('API_KEY') !== -1 || em.indexOf('INVALID') !== -1) msg = 'مشكلة في مفتاح API.';
-    else if (em.indexOf('429') !== -1 || em.indexOf('RESOURCE') !== -1) msg = 'تجاوزت حد الطلبات. انتظر قليلاً.';
-    else if (em.indexOf('Failed to fetch') !== -1 || em.indexOf('network') !== -1) msg = 'خطأ في الاتصال: ' + em.slice(0,80);
-    onError(msg);
-  });
+  };
+  xhr.ontimeout = function() { onError('انتهت مهلة الاتصال. حاول مجدداً.'); };
+  xhr.onerror = function() { onError('خطأ في الاتصال. تحقق من الإنترنت.'); };
+  xhr.send(JSON.stringify({ contents: contents, generationConfig: { maxOutputTokens: 2048, temperature: 0.7 } }));
 }
 
 // ── RENDER MESSAGES ──
