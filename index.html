@@ -22,11 +22,7 @@ html,body{height:100%;overflow:hidden}
 body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--txt);direction:rtl}
 ::-webkit-scrollbar{width:4px}::-webkit-scrollbar-thumb{background:rgba(201,168,76,0.2);border-radius:4px}
 ::-webkit-scrollbar-track{background:transparent}
-
-/* ===== LAYOUT ===== */
 .layout{display:flex;height:100vh}
-
-/* ===== SIDEBAR ===== */
 .sb{width:var(--sb-w);min-width:var(--sb-w);background:var(--bg2);border-left:1px solid var(--border);display:flex;flex-direction:column;transition:all .3s cubic-bezier(.4,0,.2,1);overflow:hidden;flex-shrink:0;z-index:10}
 .sb.closed{width:0;min-width:0;border:none}
 .sb-head{display:flex;align-items:center;justify-content:space-between;padding:.85rem .9rem;border-bottom:1px solid var(--border);flex-shrink:0}
@@ -50,14 +46,10 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--txt);dire
 .sb-foot{padding:.55rem;border-top:1px solid var(--border);flex-shrink:0}
 .fbtn{display:flex;align-items:center;gap:.42rem;padding:.42rem .6rem;background:none;border:none;color:var(--txt2);font-family:'Tajawal',sans-serif;font-size:.8rem;cursor:pointer;border-radius:7px;width:100%;transition:.18s}
 .fbtn:hover{background:rgba(255,255,255,0.05);color:var(--txt)}
-
-/* ===== MAIN ===== */
 .main{flex:1;display:flex;flex-direction:column;height:100vh;overflow:hidden;min-width:0}
 .topbar{display:flex;align-items:center;padding:.65rem .9rem;border-bottom:1px solid var(--border);flex-shrink:0;gap:.45rem;backdrop-filter:blur(8px);background:rgba(12,15,18,0.85)}
 .topmode{font-size:.86rem;font-weight:600;color:var(--txt2);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .topbar-acts{display:flex;align-items:center;gap:.2rem}
-
-/* ===== WELCOME ===== */
 .welcome{flex:1;display:flex;flex-direction:column;align-items:center;padding:1.5rem 1rem 1rem;overflow-y:auto}
 .wring{position:absolute;border-radius:50%;border:1px solid rgba(201,168,76,0.12);pointer-events:none;animation:pulse 4s ease-in-out infinite}
 .wring1{width:90px;height:90px;}
@@ -67,8 +59,6 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--txt);dire
 .wtitle{font-family:'Amiri',serif;font-size:1.65rem;font-weight:700;color:var(--gold);text-align:center;margin-bottom:.28rem}
 .wsub{font-size:.88rem;color:var(--txt2);text-align:center;margin-bottom:1.3rem;line-height:1.7}
 .wsub strong{color:var(--gold2)}
-
-/* ===== PRAYER TIMES ===== */
 .pw{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:.85rem 1rem;width:100%;max-width:540px;margin-bottom:1.3rem;position:relative;overflow:hidden}
 .pw::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold3),transparent)}
 .pwh{display:flex;justify-content:space-between;align-items:center;margin-bottom:.7rem;font-size:.82rem;color:var(--txt2);font-weight:600}
@@ -78,14 +68,10 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--txt);dire
 .pti.nx{background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.2)}
 .ptn{font-size:.67rem;color:var(--txt3)}.ptt{font-size:.92rem;font-weight:700;color:var(--txt)}.ptt.nx{color:var(--gold)}
 .pwnext{margin-top:.5rem;padding-top:.5rem;border-top:1px solid var(--border);font-size:.73rem;color:var(--gold3);text-align:center;display:flex;align-items:center;justify-content:center;gap:.3rem}
-
-/* ===== SUGGESTIONS ===== */
 .sg{display:grid;grid-template-columns:repeat(2,1fr);gap:.5rem;width:100%;max-width:540px}
 .sc{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:.75rem;cursor:pointer;text-align:right;display:flex;align-items:flex-start;gap:.5rem;transition:.2s;font-family:'Tajawal',sans-serif}
 .sc:hover{background:var(--bg4);border-color:rgba(201,168,76,0.25);transform:translateY(-1px);box-shadow:0 4px 20px rgba(0,0,0,0.3)}
 .si{font-size:1rem;flex-shrink:0;margin-top:.05rem}.st{font-size:.8rem;color:var(--txt2);line-height:1.45;flex:1}
-
-/* ===== CHAT ===== */
 .chatarea{flex:1;overflow-y:auto;display:flex;flex-direction:column;align-items:center;padding:1rem 0}
 .msgs{width:100%;max-width:720px;padding:0 1rem;display:flex;flex-direction:column}
 .msg{display:flex;gap:.7rem;padding:.85rem 0;border-bottom:1px solid rgba(255,255,255,0.035)}
@@ -109,29 +95,20 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--txt);dire
 .mtxt pre{background:#0a0e13;border:1px solid rgba(255,255,255,0.08);border-radius:9px;padding:.8rem;overflow-x:auto;direction:ltr;text-align:left;margin:.5rem 0;font-size:.8rem;color:#c9d1d9;line-height:1.6}
 .mtxt pre::before{content:'كود';font-family:'Tajawal',sans-serif;font-size:.63rem;color:var(--txt3);display:block;text-align:right;margin-bottom:.4rem;direction:rtl}
 .mtxt code{background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);border-radius:4px;padding:.08em .3em;font-family:'Courier New',monospace;font-size:.82em;color:#9db8d2;direction:ltr;display:inline-block}
-
-/* CURSOR blinking for streaming */
 .cursor{display:inline-block;width:2px;height:1em;background:var(--gold);margin-right:1px;vertical-align:text-bottom;animation:blink .7s step-end infinite}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
-
 .macts{display:flex;gap:.25rem;margin-top:.35rem;opacity:0;transition:.18s;flex-wrap:wrap}
 .msg:hover .macts{opacity:1}
 .mact{background:none;border:1px solid var(--border);border-radius:5px;padding:.15rem .42rem;font-size:.67rem;color:var(--txt3);cursor:pointer;font-family:'Tajawal',sans-serif;transition:.15s;display:flex;align-items:center;gap:.2rem}
 .mact:hover{border-color:var(--border2);color:var(--txt);background:rgba(255,255,255,0.05)}
 .mact.copied{border-color:rgba(76,175,130,.4);color:var(--green)}
-
-/* Rating */
 .mrate{display:flex;gap:.2rem;margin-top:.3rem;opacity:0;transition:.18s}
 .msg:hover .mrate{opacity:1}
 .ratebtn{background:none;border:1px solid var(--border);border-radius:5px;padding:.12rem .35rem;font-size:.72rem;cursor:pointer;transition:.15s;color:var(--txt3)}
 .ratebtn:hover{border-color:var(--border2);background:rgba(255,255,255,0.05)}
 .ratebtn.liked{border-color:rgba(76,175,130,.4);color:var(--green);background:rgba(76,175,130,0.08)}
 .ratebtn.disliked{border-color:rgba(224,80,80,.4);color:var(--red);background:rgba(224,80,80,0.08)}
-
-/* Token counter */
 .token-info{font-size:.62rem;color:var(--txt3);text-align:center;margin:.3rem 0;opacity:.6}
-
-/* ===== INPUT ===== */
 .inarea{padding:.7rem .9rem .85rem;border-top:1px solid var(--border);flex-shrink:0;background:rgba(12,15,18,0.6);backdrop-filter:blur(8px)}
 .inwrap{max-width:720px;margin:0 auto;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--radius);padding:.55rem .75rem;display:flex;flex-direction:column;gap:.28rem;transition:.2s;position:relative}
 .inwrap:focus-within{border-color:rgba(201,168,76,0.35);box-shadow:0 0 0 3px rgba(201,168,76,0.06)}
@@ -150,8 +127,6 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--txt);dire
 .stopbtn.show{display:flex}
 .disc{max-width:720px;margin:.28rem auto 0;font-size:.64rem;color:var(--txt3);text-align:center;display:flex;align-items:center;justify-content:center;gap:.5rem}
 .disc span{opacity:.5}
-
-/* ===== MODALS ===== */
 .ov{position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.8);display:flex;align-items:center;justify-content:center;padding:1rem;backdrop-filter:blur(5px)}
 .mbox{background:var(--bg3);border:1px solid var(--border2);border-radius:16px;width:100%;max-width:440px;max-height:85vh;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 25px 70px rgba(0,0,0,.7);animation:msin .2s ease}
 .mbox.wide{max-width:560px}
@@ -167,8 +142,6 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--txt);dire
 .aza{font-family:'Amiri',serif;font-size:1rem;line-height:2.1;color:var(--txt);margin-bottom:.32rem}
 .azk{font-size:.7rem;color:var(--gold3);margin-bottom:.22rem;display:flex;align-items:center;gap:.25rem}
 .azf{font-size:.73rem;color:var(--txt2);line-height:1.5;border-top:1px solid var(--border);padding-top:.25rem;margin-top:.3rem}
-
-/* ===== QIBLA ===== */
 .qibla-wrap{display:flex;flex-direction:column;align-items:center;gap:.9rem;padding:.5rem}
 .compass{width:180px;height:180px;position:relative;border-radius:50%;border:2px solid var(--border2);background:radial-gradient(circle at center,var(--bg4),var(--bg2));box-shadow:0 0 40px rgba(0,0,0,.5),inset 0 0 20px rgba(0,0,0,.3)}
 .compass-inner{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column}
@@ -178,13 +151,10 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--txt);dire
 .compass-center{width:10px;height:10px;border-radius:50%;background:var(--gold);box-shadow:0 0 8px var(--gold);z-index:2}
 .compass-dirs{position:absolute;inset:5px;display:flex;align-items:center;justify-content:center}
 .compass-dirs span{position:absolute;font-size:.65rem;font-weight:700;color:var(--txt3);font-family:'Tajawal',sans-serif}
-.compass-dirs .dn{top:6px;color:var(--gold)}
-.compass-dirs .ds{bottom:6px}.compass-dirs .de{left:6px}.compass-dirs .dw{right:6px}
+.compass-dirs .dn{top:6px;color:var(--gold)}.compass-dirs .ds{bottom:6px}.compass-dirs .de{left:6px}.compass-dirs .dw{right:6px}
 .qibla-deg{font-size:1.4rem;font-weight:700;color:var(--gold);font-family:'Amiri',serif}
 .qibla-sub{font-size:.78rem;color:var(--txt2);text-align:center}
 .qibla-err{font-size:.82rem;color:var(--txt2);text-align:center;line-height:1.7;padding:.5rem}
-
-/* ===== QURAN SEARCH ===== */
 .qsearch-wrap{display:flex;flex-direction:column;gap:.7rem}
 .qsinput{display:flex;gap:.4rem}
 .qsinput input{flex:1;background:var(--bg2);border:1px solid var(--border2);border-radius:9px;padding:.5rem .75rem;color:var(--txt);font-family:'Tajawal',sans-serif;font-size:.88rem;outline:none;transition:.2s}
@@ -196,21 +166,16 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--txt);dire
 .qr-text{font-family:'Amiri',serif;font-size:1.08rem;line-height:2.3;color:var(--txt);direction:rtl}
 .qr-trans{font-size:.78rem;color:var(--txt2);margin-top:.4rem;line-height:1.6;border-top:1px solid var(--border);padding-top:.35rem}
 .qr-loading{text-align:center;color:var(--txt3);font-size:.82rem;padding:.8rem}
-
-/* ===== TOAST ===== */
 #toast{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%) translateY(10px);background:var(--bg4);border:1px solid var(--border2);border-radius:9px;padding:.5rem 1.1rem;font-size:.81rem;color:var(--txt);box-shadow:0 8px 32px rgba(0,0,0,.5);z-index:3000;opacity:0;pointer-events:none;transition:all .25s;white-space:nowrap}
 #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 #toast.ok{border-color:rgba(76,175,130,.4);color:var(--green)}
 #toast.er{border-color:rgba(224,80,80,.4);color:#f08080}
-
-/* ===== BACKDROP ===== */
 #bd{display:none;position:fixed;inset:0;z-index:9;background:rgba(0,0,0,.55)}
-
-/* ===== TOKEN BAR ===== */
 .token-bar{height:2px;background:var(--border);border-radius:1px;overflow:hidden;margin:.25rem 0}
 .token-fill{height:100%;background:linear-gradient(90deg,var(--gold3),var(--gold));border-radius:1px;transition:width .3s}
-
-/* ===== MOBILE ===== */
+.scroll-btn{position:fixed;bottom:7rem;left:50%;transform:translateX(-50%);background:var(--bg4);border:1px solid var(--border2);border-radius:50%;width:34px;height:34px;display:none;align-items:center;justify-content:center;cursor:pointer;color:var(--txt2);box-shadow:0 4px 15px rgba(0,0,0,.4);z-index:100;transition:.2s}
+.scroll-btn:hover{color:var(--txt);border-color:var(--gold3)}
+.scroll-btn.show{display:flex}
 @media(max-width:640px){
   .sb{position:fixed;right:0;top:0;bottom:0;box-shadow:0 0 50px rgba(0,0,0,.7)}
   .sb.closed{transform:translateX(100%);width:var(--sb-w);min-width:var(--sb-w)}
@@ -219,14 +184,6 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--txt);dire
   .mbox{max-width:100%;border-radius:16px 16px 0 0;max-height:90vh;position:fixed;bottom:0;left:0;right:0}
   .ov{align-items:flex-end;padding:0}
 }
-
-/* ===== SCROLL TO BOTTOM BTN ===== */
-.scroll-btn{position:fixed;bottom:7rem;left:50%;transform:translateX(-50%);background:var(--bg4);border:1px solid var(--border2);border-radius:50%;width:34px;height:34px;display:none;align-items:center;justify-content:center;cursor:pointer;color:var(--txt2);box-shadow:0 4px 15px rgba(0,0,0,.4);z-index:100;transition:.2s}
-.scroll-btn:hover{color:var(--txt);border-color:var(--gold3)}
-.scroll-btn.show{display:flex}
-
-/* ===== KEYBOARD SHORTCUT HINT ===== */
-.kbd{display:inline-block;background:rgba(255,255,255,0.07);border:1px solid var(--border2);border-radius:4px;padding:.05rem .3rem;font-size:.6rem;color:var(--txt3);font-family:monospace;vertical-align:middle}
 </style>
 </head>
 <body>
@@ -235,14 +192,13 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--txt);dire
   <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9" transform="rotate(180,12,12)"/></svg>
 </div>
 <div class="layout">
-  <!-- SIDEBAR -->
   <aside class="sb closed" id="sb">
     <div class="sb-head">
       <div class="logo" onclick="newChat()">
         <svg width="20" height="20" viewBox="0 0 40 40" fill="none"><path d="M20 2L23 14L35 14L25 21L28 33L20 26L12 33L15 21L5 14L17 14Z" fill="#c9a84c" opacity=".92"/></svg>
         <span class="logo-txt">نور</span>
       </div>
-      <button class="ibtn" onclick="closeSB()" title="إغلاق">
+      <button class="ibtn" onclick="closeSB()">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
       </button>
     </div>
@@ -270,27 +226,25 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--txt);dire
     </div>
   </aside>
 
-  <!-- MAIN -->
   <div class="main">
     <div class="topbar">
-      <button class="ibtn" onclick="toggleSB()" title="القائمة الجانبية">
+      <button class="ibtn" onclick="toggleSB()">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
       </button>
       <div class="topmode" id="topmode">🕌 العلوم الإسلامية</div>
       <div class="topbar-acts">
-        <button class="ibtn" onclick="openQuranSearch()" title="بحث قرآني" style="font-size:.9rem">📖</button>
-        <button class="ibtn" onclick="openQibla()" title="القبلة" style="font-size:.9rem">🧭</button>
-        <button class="ibtn" onclick="openAzkar()" title="الأذكار" style="font-size:.9rem">📿</button>
-        <button class="ibtn" onclick="regenLast()" title="إعادة التوليد" id="regenBtn" style="display:none">
+        <button class="ibtn" onclick="openQuranSearch()" style="font-size:.9rem">📖</button>
+        <button class="ibtn" onclick="openQibla()" style="font-size:.9rem">🧭</button>
+        <button class="ibtn" onclick="openAzkar()" style="font-size:.9rem">📿</button>
+        <button class="ibtn" onclick="regenLast()" id="regenBtn" style="display:none">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
         </button>
-        <button class="ibtn" onclick="delChat()" title="حذف المحادثة">
+        <button class="ibtn" onclick="delChat()">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
         </button>
       </div>
     </div>
 
-    <!-- WELCOME -->
     <div class="welcome" id="welcome">
       <div class="wlogo">
         <div class="wring wring1"></div>
@@ -302,8 +256,6 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--txt);dire
       </div>
       <div class="wtitle">بسم الله الرحمن الرحيم</div>
       <div class="wsub">أنا <strong>نور</strong>، مساعدك الإسلامي الذكي · مدعوم بـ Claude</div>
-
-      <!-- PRAYER TIMES -->
       <div class="pw">
         <div class="pwh">
           <span style="display:flex;align-items:center;gap:.3rem">🕐 مواقيت الصلاة</span>
@@ -321,16 +273,13 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--txt);dire
         </div>
         <div class="pwnext" id="pnext"></div>
       </div>
-
       <div class="sg" id="sug"></div>
     </div>
 
-    <!-- CHAT -->
     <div class="chatarea" id="chat" style="display:none">
       <div class="msgs" id="msgs"></div>
     </div>
 
-    <!-- INPUT -->
     <div class="inarea">
       <div class="inwrap">
         <div class="in-top">
@@ -342,10 +291,10 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--txt);dire
             onkeydown="handleKey(event)"
             oninput="onInpChange(this)"></textarea>
           <div class="inbtns">
-            <button class="stopbtn" id="stopbtn" onclick="stopStream()" title="إيقاف">
+            <button class="stopbtn" id="stopbtn" onclick="stopStream()">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>
             </button>
-            <button class="sbtn" id="sbtn" onclick="send()" title="إرسال (Enter)">
+            <button class="sbtn" id="sbtn" onclick="send()">
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
             </button>
           </div>
@@ -404,7 +353,7 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--txt);dire
     <div class="mbody">
       <div class="qsearch-wrap">
         <div class="qsinput">
-          <input type="text" id="qsinp" placeholder="ابحث عن آية... مثال: الحمد لله أو سورة البقرة 255" 
+          <input type="text" id="qsinp" placeholder="ابحث عن آية... مثال: الحمد لله أو سورة البقرة 255"
             onkeydown="if(event.key==='Enter')searchQuran()"/>
           <button onclick="searchQuran()">بحث</button>
         </div>
@@ -417,9 +366,6 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--txt);dire
 <div id="toast"></div>
 
 <script>
-// ============================================================
-// STATE
-// ============================================================
 var S = {
   mode: 'islamic',
   convs: {},
@@ -488,13 +434,11 @@ document.addEventListener('DOMContentLoaded', function() {
   renderHist();
   renderSugs('islamic');
   getPrayer();
-  // Scroll detection
   var chat = document.getElementById('chat');
   chat.addEventListener('scroll', function() {
     var atBottom = chat.scrollHeight - chat.scrollTop - chat.clientHeight < 80;
     document.getElementById('scrollBtn').classList.toggle('show', !atBottom && chat.scrollTop > 200);
   });
-  // Keyboard shortcuts
   document.addEventListener('keydown', function(e) {
     if ((e.ctrlKey || e.metaKey) && e.key === 'n') { e.preventDefault(); newChat(); }
     if (e.key === 'Escape') { closeAzkar(); closeQibla(); closeQS(); closeSB(); }
@@ -504,9 +448,6 @@ document.addEventListener('DOMContentLoaded', function() {
 function saveC() { try { localStorage.setItem('noor_convs', JSON.stringify(S.convs)); } catch(e) {} }
 function esc(s) { return String(s||'').replace(/[&<>"']/g,function(m){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m];}); }
 
-// ============================================================
-// MODE / SUGGESTIONS
-// ============================================================
 function setMode(m, btn) {
   S.mode = m;
   document.querySelectorAll('.cat').forEach(function(b) { b.classList.remove('on'); });
@@ -528,9 +469,6 @@ function renderSugs(m) {
   g.innerHTML = html;
 }
 
-// ============================================================
-// CHAT MANAGEMENT
-// ============================================================
 function showWelcome() {
   document.getElementById('welcome').style.display = 'flex';
   document.getElementById('chat').style.display = 'none';
@@ -594,7 +532,7 @@ function delConv(id) {
 function qs(q) { document.getElementById('inp').value = q; send(); }
 
 // ============================================================
-// SEND WITH STREAMING
+// SEND - يستخدم /api/chat بدلاً من api.anthropic.com مباشرة
 // ============================================================
 function handleKey(e) {
   if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); }
@@ -606,7 +544,6 @@ function onInpChange(el) {
   var len = el.value.length;
   var cc = document.getElementById('charCount');
   cc.textContent = len > 10 ? len + ' حرف' : '';
-  // Token bar (rough estimate: 4 chars per token, max 4096)
   var est = Math.min((len / 4) / 4096 * 100, 100);
   document.getElementById('tokenFill').style.width = est + '%';
 }
@@ -617,9 +554,7 @@ function setBusy(busy) {
   document.getElementById('stopbtn').classList.toggle('show', busy);
 }
 
-function stopStream() {
-  S.stopped = true;
-}
+function stopStream() { S.stopped = true; }
 
 async function send() {
   if (S.busy) return;
@@ -642,19 +577,18 @@ async function send() {
 
   setBusy(true);
   S.stopped = false;
-  S.retryCount = (S.retryCount || 0);
 
   var aiEl = createStreamMsg();
   var txtEl = aiEl.querySelector('.mtxt');
   var cursorEl = aiEl.querySelector('.cursor');
+  var fullText = '';
 
   try {
-    var resp = await fetch('https://api.anthropic.com/v1/messages', {
+    // ✅ الآن نرسل إلى /api/chat (Vercel Serverless Function) بدلاً من Anthropic مباشرة
+    var resp = await fetch('/api/chat', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
-        'anthropic-version': '2023-06-01',
-        'anthropic-beta': 'messages-2023-12-15'
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify({
         model: 'claude-sonnet-4-20250514',
@@ -666,13 +600,12 @@ async function send() {
     });
 
     if (!resp.ok) {
-      var errData = await resp.json();
-      throw new Error((errData.error && errData.error.message) || 'خطأ من السيرفر');
+      var errData = await resp.json().catch(function(){ return {}; });
+      throw new Error((errData.error && errData.error.message) || 'خطأ ' + resp.status);
     }
 
     var reader = resp.body.getReader();
     var decoder = new TextDecoder();
-    var fullText = '';
 
     while (true) {
       if (S.stopped) { reader.cancel(); break; }
@@ -716,20 +649,18 @@ async function send() {
 
   } catch(e) {
     if (cursorEl) cursorEl.remove();
-    // If we got partial text, save it and offer retry
     if (fullText && fullText.length > 10) {
       txtEl.innerHTML = fmt(fullText);
-      var stopNote = document.createElement('div');
-      stopNote.style.cssText = 'margin-top:.6rem;display:flex;align-items:center;gap:.5rem;flex-wrap:wrap';
-      stopNote.innerHTML = '<em style="font-size:.75rem;color:var(--txt3)">⚠️ انقطع الاتصال في المنتصف</em>' +
+      var stopNote2 = document.createElement('div');
+      stopNote2.style.cssText = 'margin-top:.6rem;display:flex;align-items:center;gap:.5rem;flex-wrap:wrap';
+      stopNote2.innerHTML = '<em style="font-size:.75rem;color:var(--txt3)">⚠️ انقطع الاتصال في المنتصف</em>' +
         '<button onclick="retryLast()" style="padding:.25rem .7rem;background:var(--gold4);border:1px solid rgba(201,168,76,0.3);border-radius:6px;color:var(--gold);font-family:Tajawal,sans-serif;font-size:.75rem;cursor:pointer">🔄 إكمال الرد</button>';
-      txtEl.appendChild(stopNote);
+      txtEl.appendChild(stopNote2);
       addMsgActions(aiEl, fullText);
       c.msgs.push({ role:'assistant', content: fullText, rating: 0 });
       saveC(); renderHist();
     } else {
       aiEl.remove();
-      // Show retry banner instead of error
       var errDiv = document.createElement('div');
       errDiv.style.cssText = 'text-align:center;padding:.8rem;color:var(--txt3);font-size:.82rem';
       errDiv.innerHTML = '⚠️ انقطع الاتصال — <button onclick="retryLast()" style="background:none;border:none;color:var(--gold);cursor:pointer;font-family:Tajawal,sans-serif;font-size:.82rem;text-decoration:underline">إعادة المحاولة</button>';
@@ -747,16 +678,13 @@ function retryLast() {
   if (!S.cid || S.busy) return;
   var c = S.convs[S.cid];
   if (!c || !c.msgs.length) return;
-  // Remove last assistant msg if incomplete
   if (c.msgs[c.msgs.length-1].role === 'assistant') c.msgs.pop();
-  // Remove last two DOM elements (error/partial + retry banner)
   var msgs = document.getElementById('msgs');
   while (msgs.lastElementChild) {
     var last = msgs.lastElementChild;
     msgs.removeChild(last);
     if (last.classList && last.classList.contains('msg')) break;
   }
-  // Re-send last user message
   if (c.msgs.length && c.msgs[c.msgs.length-1].role === 'user') {
     var lastUser = c.msgs[c.msgs.length-1];
     document.getElementById('inp').value = lastUser.content;
@@ -765,9 +693,6 @@ function retryLast() {
   }
 }
 
-// ============================================================
-// MESSAGE RENDERING
-// ============================================================
 function createStreamMsg() {
   var c = document.getElementById('msgs');
   var el = document.createElement('div');
@@ -787,7 +712,7 @@ function addMsgActions(el, content) {
   acts.innerHTML = '<button class="mact" onclick="cp(this)">📋 نسخ</button><button class="mact" onclick="shr(this)">🔗 مشاركة</button><button class="mact" onclick="askAbout(this)">💬 اسأل عنه</button>';
   var rate = document.createElement('div');
   rate.className = 'mrate';
-  rate.innerHTML = '<button class="ratebtn" onclick="rate(this,1)" title="رائع">👍</button><button class="ratebtn" onclick="rate(this,-1)" title="يحتاج تحسين">👎</button>';
+  rate.innerHTML = '<button class="ratebtn" onclick="rate(this,1)">👍</button><button class="ratebtn" onclick="rate(this,-1)">👎</button>';
   mcon.appendChild(acts);
   mcon.appendChild(rate);
 }
@@ -803,23 +728,12 @@ function addMsg(role, content, animate, rating) {
   c.appendChild(el);
 }
 
-function addErrMsg(txt) {
-  var c = document.getElementById('msgs'), el = document.createElement('div');
-  el.className = 'msg';
-  el.innerHTML = '<div class="mav a" style="background:rgba(224,80,80,.25);color:var(--red)">!</div><div class="mcon"><div class="mwho" style="color:var(--red)">خطأ</div><div class="mtxt" style="color:#f08080"><p>'+esc(txt)+'</p></div></div>';
-  c.appendChild(el);
-  scrollDown(false);
-}
-
 function scrollDown(force) {
   var c = document.getElementById('chat'); if (!c) return;
   var atBottom = c.scrollHeight - c.scrollTop - c.clientHeight < 120;
   if (force || atBottom) setTimeout(function(){ c.scrollTop = c.scrollHeight; }, 30);
 }
 
-// ============================================================
-// ACTIONS
-// ============================================================
 function rate(btn, val) {
   var rateDiv = btn.parentElement;
   var btns = rateDiv.querySelectorAll('.ratebtn');
@@ -827,13 +741,7 @@ function rate(btn, val) {
   if (val === 1) btn.classList.add('liked');
   else btn.classList.add('disliked');
   toast(val === 1 ? 'شكراً على تقييمك! 😊' : 'سنعمل على التحسين', val===1?'ok':'');
-  // Save rating
-  if (S.cid && S.convs[S.cid]) {
-    var msgs = S.convs[S.cid].msgs;
-    var aiMsgs = Array.from(document.getElementById('msgs').querySelectorAll('.msg')).indexOf(rateDiv.closest('.msg'));
-    // rough save
-    saveC();
-  }
+  saveC();
 }
 
 function cp(btn) {
@@ -861,15 +769,10 @@ function regenLast() {
   if (!S.cid || S.busy) return;
   var c = S.convs[S.cid];
   if (!c || c.msgs.length < 1) return;
-  // Remove last assistant message
   if (c.msgs[c.msgs.length-1].role === 'assistant') c.msgs.pop();
-  // Remove from DOM
   var msgs = document.getElementById('msgs');
-  var last = msgs.lastElementChild;
-  if (last) last.remove();
-  last = msgs.lastElementChild;
-  if (last) last.remove();
-  // Resend last user message
+  var last = msgs.lastElementChild; if (last) last.remove();
+  last = msgs.lastElementChild; if (last) last.remove();
   var lastUser = c.msgs.pop();
   c.at = Date.now();
   document.getElementById('inp').value = lastUser.content;
@@ -950,15 +853,15 @@ function loadPTCity(city, country) {
 }
 
 function showPT(t) {
-  var map=[{id:'pf',tid:'pti-f',k:'Fajr',n:'الفجر'},{id:'pd',tid:'pti-d',k:'Dhuhr',n:'الظهر'},{id:'pa',tid:'pti-a',k:'Asr',n:'العصر'},{id:'pm',tid:'pti-m',k:'Maghrib',n:'المغرب'},{id:'pi',tid:'pti-i',k:'Isha',n:'العشاء'}];
-  var nm=new Date().getHours()*60+new Date().getMinutes(),minD=Infinity,nextN='',nextT='',nextIdx=-1,times=[];
+  var map=[{id:'pf',tid:'pti-f',k:'Fajr'},{id:'pd',tid:'pti-d',k:'Dhuhr'},{id:'pa',tid:'pti-a',k:'Asr'},{id:'pm',tid:'pti-m',k:'Maghrib'},{id:'pi',tid:'pti-i',k:'Isha'}];
+  var nm=new Date().getHours()*60+new Date().getMinutes(),minD=Infinity,nextN='',nextT='',nextIdx=-1;
+  var pnames=['الفجر','الظهر','العصر','المغرب','العشاء'];
   for(var i=0;i<map.length;i++){
     var el=document.getElementById(map[i].id);if(!el)continue;
     var ts=(t[map[i].k]||'').replace(/\s*\(.*\)/,'').trim();if(!ts)continue;
     el.classList.remove('nx');el.textContent=to12(ts);
     var pp=ts.split(':'),h=parseInt(pp[0]),m=parseInt(pp[1]),diff=(h*60+m)-nm;
-    times.push({diff:diff,idx:i,name:map[i].n,timeStr:ts});
-    if(diff>0&&diff<minD){minD=diff;nextN=map[i].n;nextT=to12(ts);nextIdx=i;}
+    if(diff>0&&diff<minD){minD=diff;nextN=pnames[i];nextT=to12(ts);nextIdx=i;}
   }
   if(nextIdx>=0){
     var el2=document.getElementById(map[nextIdx].id);if(el2)el2.classList.add('nx');
@@ -1021,11 +924,9 @@ function openQibla() {
     document.getElementById('qibla-wrap').innerHTML='<div class="qibla-err">المتصفح لا يدعم تحديد الموقع.</div>';
   }
 }
-
 function closeQibla() { document.getElementById('qmod').style.display='none'; }
 
 function showQibla(lat, lng) {
-  // Kaaba coordinates
   var kLat = 21.4225, kLng = 39.8262;
   var dLng = (kLng - lng) * Math.PI / 180;
   var lat1 = lat * Math.PI / 180, lat2 = kLat * Math.PI / 180;
@@ -1033,26 +934,16 @@ function showQibla(lat, lng) {
   var y = Math.cos(lat1)*Math.sin(lat2) - Math.sin(lat1)*Math.cos(lat2)*Math.cos(dLng);
   var bearing = Math.atan2(x, y) * 180 / Math.PI;
   var qiblaAngle = (bearing + 360) % 360;
-
   var dist = Math.round(6371 * Math.acos(
     Math.sin(lat*Math.PI/180)*Math.sin(kLat*Math.PI/180) +
     Math.cos(lat*Math.PI/180)*Math.cos(kLat*Math.PI/180)*Math.cos((kLng-lng)*Math.PI/180)
   ));
-
   document.getElementById('qibla-wrap').innerHTML =
-    '<div class="compass">' +
-      '<div class="compass-dirs">' +
-        '<span class="dn">ش</span><span class="ds">ج</span><span class="de">غ</span><span class="dw">ق</span>' +
-      '</div>' +
-      '<div class="compass-arrow" id="qArrow">' +
-        '<div class="arrow-up"></div><div class="arrow-down"></div>' +
-      '</div>' +
-      '<div class="compass-inner"><div class="compass-center"></div></div>' +
-    '</div>' +
+    '<div class="compass"><div class="compass-dirs"><span class="dn">ش</span><span class="ds">ج</span><span class="de">غ</span><span class="dw">ق</span></div>' +
+    '<div class="compass-arrow" id="qArrow"><div class="arrow-up"></div><div class="arrow-down"></div></div>' +
+    '<div class="compass-inner"><div class="compass-center"></div></div></div>' +
     '<div class="qibla-deg">'+Math.round(qiblaAngle)+'°</div>' +
     '<div class="qibla-sub">اتجاه القبلة من موقعك الحالي<br>المسافة إلى مكة المكرمة: ~'+dist.toLocaleString('ar')+' كم</div>';
-
-  // Try device orientation
   if (window.DeviceOrientationEvent) {
     var handler = function(e) {
       var compass = e.webkitCompassHeading || (e.alpha ? 360 - e.alpha : null);
@@ -1063,18 +954,15 @@ function showQibla(lat, lng) {
     };
     if (typeof DeviceOrientationEvent.requestPermission === 'function') {
       DeviceOrientationEvent.requestPermission().then(function(r){
-        if(r==='granted') window.addEventListener('deviceorientation',handler,{once:false});
+        if(r==='granted') window.addEventListener('deviceorientation',handler);
       });
     } else {
       window.addEventListener('deviceorientation', handler);
     }
   }
-  // Static fallback arrow
   setTimeout(function(){
     var arrow = document.getElementById('qArrow');
-    if (arrow && arrow.style.transform.indexOf('rotate(0') > -1 || (arrow && !arrow.style.transform)) {
-      arrow && (arrow.style.transform = 'translateX(-50%) rotate('+qiblaAngle+'deg)');
-    }
+    if (arrow) arrow.style.transform = 'translateX(-50%) rotate('+qiblaAngle+'deg)';
   }, 300);
 }
 
@@ -1090,8 +978,6 @@ async function searchQuran() {
   if (!q) return;
   var res = document.getElementById('qsresults');
   res.innerHTML = '<div class="qr-loading">⏳ جارٍ البحث...</div>';
-
-  // Check if it's a verse reference like "2:255"
   var refMatch = q.match(/^(\d+)[:\s-](\d+)$/);
   if (refMatch) {
     try {
@@ -1104,8 +990,6 @@ async function searchQuran() {
       }
     } catch(e) {}
   }
-
-  // Text search via alquran.cloud
   try {
     var resp2 = await fetch('https://api.alquran.cloud/v1/search/'+encodeURIComponent(q)+'/all/ar');
     var data2 = await resp2.json();
