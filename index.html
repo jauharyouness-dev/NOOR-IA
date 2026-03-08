@@ -457,12 +457,31 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--txt);dire
 .sync-badge.cloud{background:rgba(88,166,255,.1);color:var(--blue);border-color:rgba(88,166,255,.2)}
 
 @media(max-width:640px){
-  .sb{position:fixed;right:0;top:0;bottom:0}
-  .sb.closed{transform:translateX(100%);width:265px;min-width:265px}
-  .sg{grid-template-columns:1fr}.ptg{grid-template-columns:repeat(3,1fr)}
-  .msgs{padding:0 .8rem}.calc-grid{grid-template-columns:repeat(4,1fr)}
+  .sb{
+    position:fixed;right:0;top:0;bottom:0;
+    width:280px!important;min-width:280px!important;
+    transform:translateX(105%);
+    transition:transform .3s cubic-bezier(.4,0,.2,1);
+    z-index:200;
+    border-left:1px solid var(--border)!important;
+  }
+  .sb.closed{transform:translateX(105%)!important}
+  .sb:not(.closed){transform:translateX(0)!important}
+  .topbar{padding:.5rem .7rem;gap:.25rem;flex-wrap:nowrap}
+  .topmode{font-size:.78rem;min-width:0}
+  .model-badge{display:none}
+  .lang-sel{display:none}
+  .sync-badge{display:none!important}
+  .sg{grid-template-columns:1fr}
+  .ptg{grid-template-columns:repeat(3,1fr)}
+  .msgs{padding:0 .8rem}
+  .calc-grid{grid-template-columns:repeat(4,1fr)}
   .asma-grid{grid-template-columns:repeat(2,1fr)}
   .auth-box{max-width:100%}
+  .inarea{padding:.6rem .7rem .8rem}
+  .welcome{padding:1rem .8rem;gap:.75rem}
+  .wtitle{font-size:1.4rem}
+  .pw,.verse-card{max-width:100%}
 }
 </style>
 </head>
@@ -1660,6 +1679,38 @@ function callAPI(msgs,onSuccess,onError){var key=KEYS[0];fetch('https://api.groq
 function streamAPI(msgs,hasImage,onChunk,onDone,onError){var attempt=0;function tryKey(){if(attempt>=KEYS.length){onError('انتهت المفاتيح');setKeyUI('e','انتهت المفاتيح');return;}var key=KEYS[attempt];var model=hasImage?MODEL_VISION:MODEL_TEXT;setKeyUI('w','يكتب...');document.getElementById('modelBadge').textContent=hasImage?'Llama 4 Scout':'Llama 3.3 70B';fetch('https://api.groq.com/openai/v1/chat/completions',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},body:JSON.stringify({model:model,messages:msgs,max_tokens:2048,temperature:0.65,stream:true})}).then(function(r){if(r.status===429||r.status===401){attempt++;toast('مفتاح محدود — تحويل...','w');setTimeout(tryKey,700);return;}if(!r.ok){r.json().then(function(d){onError((d.error&&d.error.message)||'خطأ '+r.status);});return;}var reader=r.body.getReader(),decoder=new TextDecoder(),buf='';function read(){reader.read().then(function(result){if(result.done){setKeyUI('','جاهز');onDone();return;}buf+=decoder.decode(result.value,{stream:true});var lines=buf.split('\n');buf=lines.pop();lines.forEach(function(line){line=line.trim();if(!line||line==='data: [DONE]')return;if(line.indexOf('data: ')===0){try{var obj=JSON.parse(line.slice(6));var delta=obj.choices&&obj.choices[0]&&obj.choices[0].delta;if(delta&&delta.content)onChunk(delta.content);}catch(e){}}});read();}).catch(function(e){onError('خطأ stream: '+e.message);});}read();}).catch(function(e){onError('خطأ اتصال: '+e.message);});}tryKey();}
 function setKeyUI(cls,txt){var d=document.getElementById('kdot'),l=document.getElementById('keyStatus');if(d)d.className='kdot'+(cls?' '+cls:'');if(l)l.textContent=txt;}
 
+// ═══ IMAGE REQUEST DETECTION ═══
+var IMG_KEYWORDS = [
+  'انشئ صورة','انشئلي صورة','ارسم','اصنع صورة','ولد صورة','توليد صورة',
+  'صورة لـ','صورة عن','صورة من','صورة ل',
+  'اعطني صورة','اعطيني صورة','أريد صورة','اريد صورة',
+  'رسم لـ','رسم عن','رسم من',
+  'generate image','create image','draw','make image','image of',
+  'انشئ لي صورة','أنشئ صورة','أنشئلي',
+  'صمم','صمملي','تصميم صورة'
+];
+function isImageRequest(txt) {
+  var lower = txt.toLowerCase();
+  for(var i=0; i<IMG_KEYWORDS.length; i++){
+    if(lower.indexOf(IMG_KEYWORDS[i]) >= 0) return true;
+  }
+  return false;
+}
+function extractImagePrompt(txt) {
+  // Remove the trigger words and return the subject
+  var cleaned = txt;
+  var removes = ['انشئ صورة','انشئلي صورة','ارسم لي','ارسم','اصنع صورة','ولد صورة','توليد صورة',
+    'اعطني صورة','اعطيني صورة','أريد صورة','اريد صورة','انشئ لي صورة','أنشئ صورة','أنشئلي',
+    'صمم لي','صمملي','تصميم صورة','صورة لـ','صورة عن','صورة من','صورة ل',
+    'رسم لـ','رسم عن','رسم من','generate image of','create image of','draw','make image of','image of',
+    'صورة','رسم','generate','create','make'];
+  removes.sort(function(a,b){return b.length-a.length;});
+  removes.forEach(function(r){
+    cleaned = cleaned.replace(new RegExp(r,'gi'),'').trim();
+  });
+  return cleaned || txt;
+}
+
 // ═══ SEND ═══
 function send(){
   if(S.busy)return;
@@ -1668,6 +1719,56 @@ function send(){
   var hasAtt=!!S.attach;
   if(!txt&&!hasAtt)return;
   if(!txt)txt=S.attach.type==='image'?'حلل هذه الصورة بالتفصيل':'حلل محتوى هذا الملف';
+
+  // ★ اكتشاف تلقائي لطلبات توليد الصور
+  if(!hasAtt && isImageRequest(txt)) {
+    var imgPrompt = extractImagePrompt(txt);
+    inp.value=''; inp.style.height='auto';
+    if(!S.cid){mkConv(txt);showChat();}
+    var c=S.convs[S.cid];
+    c.msgs.push({role:'user',content:txt});
+    addMsg('user',txt,true,null);
+    scrollDown();
+    // أضف رسالة "جاري التوليد..."
+    var el=document.createElement('div');el.className='msg new ast';
+    el.innerHTML='<div class="mav a">ن</div><div class="mcon"><div class="mwho">نور AI <span class="mbadge">🎨 توليد صورة</span></div><div class="mtxt" id="img-gen-msg"><div style="display:flex;align-items:center;gap:.5rem;color:var(--gold3);font-size:.85rem">⏳ جاري توليد الصورة...</div></div></div>';
+    document.getElementById('msgs').appendChild(el);
+    scrollDown();
+    S.busy=true; document.getElementById('sbtn').disabled=true;
+    // ترجمة عربي ← إنجليزي إذا لزم
+    var arabicRegex=/[\u0600-\u06FF]/;
+    function doGenerate(finalPrompt){
+      var seed=Math.floor(Math.random()*99999);
+      var fullPrompt=finalPrompt+', high quality, detailed, realistic';
+      var url='https://image.pollinations.ai/prompt/'+encodeURIComponent(fullPrompt)+'?width=1024&height=1024&seed='+seed+'&nologo=true&enhance=true';
+      var genMsg=document.getElementById('img-gen-msg');
+      if(genMsg){
+        genMsg.removeAttribute('id');
+        genMsg.innerHTML=
+          '<div style="font-size:.78rem;color:var(--gold3);margin-bottom:.5rem">🎨 '+esc(txt)+'</div>'+
+          '<img src="'+url+'" alt="صورة مولّدة" style="max-width:100%;border-radius:12px;border:1px solid var(--border);display:block;background:var(--bg3)" '+
+          'onload="document.getElementById(\'sbtn\').disabled=false;S.busy=false;" '+
+          'onerror="this.parentElement.innerHTML=\'<span style=color:var\\(--red\\)>تعذر توليد الصورة، حاول مجدداً</span>\';document.getElementById(\'sbtn\').disabled=false;S.busy=false;"/>'+
+          '<div style="display:flex;gap:.4rem;margin-top:.5rem">'+
+          '<a href="'+url+'" download="noor-image.jpg" style="flex:1;padding:.35rem;background:var(--gbg);border:1px solid rgba(201,168,76,.25);border-radius:7px;color:var(--gold3);font-size:.75rem;text-align:center;text-decoration:none">⬇️ تحميل</a>'+
+          '<button onclick="openImageGenWithPrompt(\''+finalPrompt.replace(/'/g,"\\'")+'\')" style="flex:1;padding:.35rem;background:var(--bg2);border:1px solid var(--border);border-radius:7px;color:var(--txt2);font-family:Tajawal,sans-serif;font-size:.75rem;cursor:pointer">🔄 توليد أخرى</button>'+
+          '</div>';
+      }
+      c.msgs.push({role:'assistant',content:'[صورة مولّدة: '+txt+']'});
+      saveC();renderHist();
+    }
+    if(arabicRegex.test(imgPrompt)){
+      callAPI([
+        {role:'system',content:'Translate to English for image generation. Output ONLY the translation, nothing else.'},
+        {role:'user',content:imgPrompt}
+      ], function(translated){ doGenerate(translated.trim()||imgPrompt); },
+         function(){ doGenerate(imgPrompt); });
+    } else {
+      doGenerate(imgPrompt);
+    }
+    return;
+  }
+
   inp.value='';inp.style.height='auto';
   if(!S.cid){mkConv(txt);showChat();}
   var c=S.convs[S.cid];
@@ -1711,6 +1812,10 @@ function send(){
     function(err){streamTxt.innerHTML='<span style="color:var(--red)">'+esc(err)+'</span>';S.busy=false;document.getElementById('sbtn').disabled=false;}
   );
 }
+function openImageGenWithPrompt(prompt) {
+  openImageGen();
+  setTimeout(function(){ document.getElementById('imgPrompt').value=prompt; }, 100);
+}
 function saveToNote(btn) {
   var content = btn.closest('.mcon').querySelector('.mtxt').innerText;
   var note = { id: uid(), title: 'ملاحظة من نور AI — ' + new Date().toLocaleDateString('ar'), content: content, at: Date.now() };
@@ -1748,8 +1853,19 @@ function clearAll(){if(!confirm('حذف الكل؟'))return;S.convs={};S.cid=nul
 function searchConvs(q){var h=document.getElementById('hist');if(!q.trim()){renderHist();return;}var results=Object.values(S.convs).filter(function(c){return c.title.toLowerCase().includes(q.toLowerCase())||c.msgs.some(function(m){return(m.content||'').toLowerCase().includes(q.toLowerCase());});}).sort(function(a,b){return b.at-a.at;});if(!results.length){h.innerHTML='<div style="font-size:.73rem;color:var(--txt3);padding:.4rem .65rem">لا نتائج</div>';return;}h.innerHTML=results.map(function(cv){return'<div class="hi'+(cv.id===S.cid?' on':'')+'" onclick="loadConv(\''+cv.id+'\')">🔍 '+esc(cv.title)+'</div>';}).join('');}
 
 // ═══ SIDEBAR ═══
-function toggleSB(){var sb=document.getElementById('sb'),bd=document.getElementById('bd');if(sb.classList.contains('closed')){sb.classList.remove('closed');bd.style.display=window.innerWidth<=640?'block':'none';}else closeSB();}
-function closeSB(){document.getElementById('sb').classList.add('closed');document.getElementById('bd').style.display='none';}
+function toggleSB(){
+  var sb=document.getElementById('sb'),bd=document.getElementById('bd');
+  var isOpen=!sb.classList.contains('closed');
+  if(isOpen){closeSB();}
+  else{
+    sb.classList.remove('closed');
+    if(window.innerWidth<=640){bd.style.display='block';}
+  }
+}
+function closeSB(){
+  document.getElementById('sb').classList.add('closed');
+  document.getElementById('bd').style.display='none';
+}
 
 // ═══ AZKAR ═══
 function openAzkar(){document.getElementById('amod').style.display='flex';showAzkar('sabah');}
