@@ -1092,9 +1092,61 @@ function handleFile(input){var f=input.files[0];if(!f)return;var isPDF=f.type===
 function clearAttach(){S.attach=null;document.getElementById('attPrev').style.display='none';document.getElementById('attImg').src='';document.getElementById('attImg').style.display='none';}
 
 // ═══ API ═══
-function callAPI(msgs,onSuccess,onError){fetch(PROXY_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:MODEL_TEXT,messages:msgs,max_tokens:1000,temperature:0.5})}).then(function(r){return r.json().then(function(d){return{s:r.status,d:d};});}).then(function(res){if(res.s!==200){onError((res.d.error&&res.d.error.message)||'خطأ '+res.s);}else if(res.d.choices&&res.d.choices[0]&&res.d.choices[0].message){onSuccess(res.d.choices[0].message.content||'');}else onError('لم يصل رد');}).catch(function(e){onError(e.message);});}
+var _retryTimer=null;
+function show429Msg(stEl,retryFn){
+  var sec=62;
+  stEl.innerHTML='<div style="display:flex;flex-direction:column;gap:.5rem;align-items:flex-start"><div style="color:var(--red);font-size:.82rem">⚠️ تجاوزت حد الطلبات المجاني من Groq (429)</div><div style="color:var(--txt3);font-size:.75rem" id="_rc">⏳ إعادة المحاولة خلال <b>'+sec+'</b> ثانية...</div><button onclick="clearInterval(window._rc2);clearTimeout(_retryTimer);'+retryFn+'" style="padding:.28rem .7rem;background:var(--gbg);border:1px solid rgba(201,168,76,.3);border-radius:7px;color:var(--gold);font-size:.75rem;cursor:pointer;font-family:Tajawal,sans-serif">🔄 إعادة المحاولة الآن</button></div>';
+  window._rc2=setInterval(function(){sec--;var el=document.getElementById('_rc');if(el)el.innerHTML='⏳ إعادة المحاولة خلال <b>'+sec+'</b> ثانية...';if(sec<=0)clearInterval(window._rc2);},1000);
+}
+function callAPI(msgs,onSuccess,onError,_retry){
+  fetch(PROXY_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:MODEL_TEXT,messages:msgs,max_tokens:1000,temperature:0.5})})
+  .then(function(r){return r.json().then(function(d){return{s:r.status,d:d};});})
+  .then(function(res){
+    if(res.s===429){
+      if(!_retry){setTimeout(function(){callAPI(msgs,onSuccess,onError,true);},62000);}
+      else onError('خطأ 429 — تجاوز الحد المجاني');
+    }else if(res.s!==200){onError((res.d.error&&res.d.error.message)||'خطأ '+res.s);}
+    else if(res.d.choices&&res.d.choices[0]&&res.d.choices[0].message){onSuccess(res.d.choices[0].message.content||'');}
+    else onError('لم يصل رد');
+  }).catch(function(e){onError(e.message);});
+}
 function callAPIAsync(msgs){return new Promise(function(res,rej){callAPI(msgs,res,rej);});}
-function streamAPI(msgs,hasImage,onChunk,onDone,onError){var model=hasImage?MODEL_VISION:MODEL_TEXT;setKeyUI('w','يكتب...');fetch(PROXY_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:model,messages:msgs,max_tokens:2048,temperature:0.65,stream:true})}).then(function(r){if(!r.ok){r.json().then(function(d){onError((d.error&&d.error.message)||'خطأ '+r.status);});return;}var reader=r.body.getReader(),decoder=new TextDecoder(),buf='';function read(){reader.read().then(function(result){if(result.done){setKeyUI('','جاهز');onDone();return;}buf+=decoder.decode(result.value,{stream:true});var lines=buf.split('\n');buf=lines.pop();lines.forEach(function(line){line=line.trim();if(!line||line==='data: [DONE]')return;if(line.indexOf('data: ')===0){try{var obj=JSON.parse(line.slice(6));var delta=obj.choices&&obj.choices[0]&&obj.choices[0].delta;if(delta&&delta.content)onChunk(delta.content);}catch(e){}}});read();}).catch(function(e){onError('خطأ stream: '+e.message);});}read();}).catch(function(e){onError('خطأ اتصال: '+e.message);});}
+function streamAPI(msgs,hasImage,onChunk,onDone,onError,_stEl,_retryPayload){
+  var model=hasImage?MODEL_VISION:MODEL_TEXT;
+  setKeyUI('w','يكتب...');
+  fetch(PROXY_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:model,messages:msgs,max_tokens:2048,temperature:0.65,stream:true})})
+  .then(function(r){
+    if(r.status===429){
+      setKeyUI('e','حد الطلبات');
+      if(_stEl){
+        var retryCode='streamAPI('+JSON.stringify(msgs).replace(/'/g,"\\'").replace(/"/g,"'")+','+hasImage+',onChunk,onDone,onError,_stEl)';
+        show429Msg(_stEl,'this.closest(\'.msg\').dispatchEvent(new CustomEvent(\'noor-retry\'))');
+        if(_retryPayload){
+          clearTimeout(_retryTimer);
+          _retryTimer=setTimeout(function(){
+            _stEl.innerHTML='<span class="stream-cursor"></span>';
+            streamAPI(msgs,hasImage,onChunk,onDone,onError,_stEl,null);
+          },62000);
+        }
+      }else onError('خطأ 429 — تجاوز الحد');
+      return;
+    }
+    if(!r.ok){r.json().then(function(d){onError((d.error&&d.error.message)||'خطأ '+r.status);});return;}
+    var reader=r.body.getReader(),decoder=new TextDecoder(),buf='';
+    function read(){reader.read().then(function(result){
+      if(result.done){setKeyUI('','جاهز');onDone();return;}
+      buf+=decoder.decode(result.value,{stream:true});
+      var lines=buf.split('\n');buf=lines.pop();
+      lines.forEach(function(line){
+        line=line.trim();
+        if(!line||line==='data: [DONE]')return;
+        if(line.indexOf('data: ')===0){try{var obj=JSON.parse(line.slice(6));var delta=obj.choices&&obj.choices[0]&&obj.choices[0].delta;if(delta&&delta.content)onChunk(delta.content);}catch(e){}}
+      });
+      read();
+    }).catch(function(e){onError('خطأ stream: '+e.message);});}
+    read();
+  }).catch(function(e){onError('خطأ اتصال: '+e.message);});
+}
 function isImageRequest(txt){var l=txt.toLowerCase();return IMG_KEYWORDS.some(function(k){return l.indexOf(k)>=0;});}
 function extractImagePrompt(txt){var cleaned=txt;['انشئ صورة','ارسم لي','ارسم','اصنع صورة','ولد صورة','توليد صورة','اعطني صورة','اريد صورة','صمم لي','صمم','تصميم صورة','صورة لـ','صورة عن','رسم لـ','generate image of','create image of','draw','image of','صورة','رسم'].sort(function(a,b){return b.length-a.length;}).forEach(function(r){cleaned=cleaned.replace(new RegExp(r,'gi'),'').trim();});return cleaned||txt;}
 function setImgStyle(btn,style){document.querySelectorAll('.img-style').forEach(function(b){b.classList.remove('on');});btn.classList.add('on');imgStyleVal=style;}
@@ -1136,11 +1188,25 @@ function send(){
   var el=document.createElement('div');el.className='msg new ast';el.innerHTML='<div class="mav a">ن</div><div class="mcon"><div class="mwho">نور AI <span class="mbadge">streaming</span></div><div class="mtxt" id="st"><span class="stream-cursor"></span></div></div>';document.getElementById('msgs').appendChild(el);scrollDown();
   var st=document.getElementById('st'),fullReply='';
   S.busy=true;document.getElementById('sbtn').disabled=true;
-  streamAPI(apiMsgs,hasImage,
-    function(chunk){fullReply+=chunk;st.innerHTML=fmt(fullReply)+'<span class="stream-cursor"></span>';scrollDown();},
-    function(){st.removeAttribute('id');st.innerHTML=fmt(fullReply);var acts=document.createElement('div');acts.className='macts';acts.innerHTML='<button class="mact" onclick="cpMsg(this)">📋 نسخ</button><button class="mact" onclick="speakMsg(this)">🔊</button><button class="mact" onclick="translateMsg(this)">🌐 ترجمة</button><button class="mact" onclick="pinMsg(this,this.closest(\'.msg\'))">📌 تثبيت</button><button class="mact" onclick="saveToNote(this)">📓 حفظ</button>';el.querySelector('.mcon').appendChild(acts);c.msgs.push({role:'assistant',content:fullReply});saveC();renderHist();S.busy=false;document.getElementById('sbtn').disabled=false;document.getElementById('inp').focus();},
-    function(err){st.innerHTML='<span style="color:var(--red)">'+esc(err)+'</span>';S.busy=false;document.getElementById('sbtn').disabled=false;}
-  );
+  function doStream(){
+    streamAPI(apiMsgs,hasImage,
+      function(chunk){fullReply+=chunk;st.innerHTML=fmt(fullReply)+'<span class="stream-cursor"></span>';scrollDown();},
+      function(){st.removeAttribute('id');st.innerHTML=fmt(fullReply);var acts=document.createElement('div');acts.className='macts';acts.innerHTML='<button class="mact" onclick="cpMsg(this)">📋 نسخ</button><button class="mact" onclick="speakMsg(this)">🔊</button><button class="mact" onclick="translateMsg(this)">🌐 ترجمة</button><button class="mact" onclick="pinMsg(this,this.closest(\'.msg\'))">📌 تثبيت</button><button class="mact" onclick="saveToNote(this)">📓 حفظ</button>';el.querySelector('.mcon').appendChild(acts);c.msgs.push({role:'assistant',content:fullReply});saveC();renderHist();S.busy=false;document.getElementById('sbtn').disabled=false;document.getElementById('inp').focus();},
+      function(err){
+        if(err&&(err.indexOf('429')>=0||err.indexOf('Rate limit')>=0||err.indexOf('rate limit')>=0)){
+          setKeyUI('e','حد الطلبات');
+          var sec=62;
+          st.innerHTML='<div style="display:flex;flex-direction:column;gap:.5rem;padding:.5rem 0"><div style="color:var(--red);font-size:.82rem;font-weight:700">⚠️ تجاوزت الحد المجاني من Groq (429)</div><div style="color:var(--txt2);font-size:.76rem">يتجدد الحد كل دقيقة — سيتم الإعادة تلقائياً</div><div style="color:var(--txt3);font-size:.74rem" id="_rc429">⏳ إعادة تلقائية خلال <b>62</b> ثانية...</div><div style="display:flex;gap:.4rem;margin-top:.2rem"><button onclick="clearInterval(window._rc2);clearTimeout(window._retryTimer);fullReply=\'\';this.closest(\'.mtxt\').innerHTML=\'<span class=stream-cursor></span>\';setKeyUI(\'w\',\'يكتب...\');doStream();" style="padding:.3rem .75rem;background:var(--gbg);border:1px solid rgba(201,168,76,.3);border-radius:7px;color:var(--gold);font-size:.76rem;cursor:pointer;font-family:Tajawal,sans-serif;transition:.15s">🔄 أعد الآن</button><button onclick="S.busy=false;document.getElementById(\'sbtn\').disabled=false;clearInterval(window._rc2);clearTimeout(window._retryTimer);" style="padding:.3rem .75rem;background:none;border:1px solid var(--border);border-radius:7px;color:var(--txt3);font-size:.76rem;cursor:pointer;font-family:Tajawal,sans-serif">✕ إلغاء</button></div></div>';
+          window._rc2=setInterval(function(){sec--;var rcEl=document.getElementById('_rc429');if(rcEl)rcEl.innerHTML='⏳ إعادة تلقائية خلال <b>'+sec+'</b> ثانية...';if(sec<=0)clearInterval(window._rc2);},1000);
+          window._retryTimer=setTimeout(function(){clearInterval(window._rc2);fullReply='';if(st&&st.parentNode){st.innerHTML='<span class="stream-cursor"></span>';setKeyUI('w','يكتب...');doStream();}},62000);
+        }else{
+          st.innerHTML='<span style="color:var(--red)">'+esc(err)+'</span>';
+          S.busy=false;document.getElementById('sbtn').disabled=false;
+        }
+      }
+    );
+  }
+  doStream();
 }
 
 // ═══ MSG ACTIONS ═══
